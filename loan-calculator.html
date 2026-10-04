@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Loan Calculator Malaysia: Compare Car, Home and Personal Loan Offers</title>
+<meta name="description" content="Free Malaysia loan calculator. Compare two car, home or personal loan offers side by side, with monthly instalment, total interest and the true effective rate behind a flat rate.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f7f5fb;--card:#fff;--ink:#251c3a;--mute:#6a6082;--line:#e1dbee;--acc:#6d3fb5;--accbg:#ece4f8;--good:#16603a;--goodbg:#dff3e6;--a:#6d3fb5;--b:#c2570c;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15101f;--card:#1f1830;--ink:#efeaf8;--mute:#b3a9cc;--line:#382d52;--acc:#b9a0f0;--accbg:#34274f;--good:#7fd9a2;--goodbg:#17372a;--a:#b9a0f0;--b:#ff9d5c}}
+:root[data-theme="dark"]{--bg:#15101f;--card:#1f1830;--ink:#efeaf8;--mute:#b3a9cc;--line:#382d52;--acc:#b9a0f0;--accbg:#34274f;--good:#7fd9a2;--goodbg:#17372a;--a:#b9a0f0;--b:#ff9d5c}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:0 auto;padding:26px 16px 56px}
+h1{font-size:clamp(1.8rem,5vw,2.5rem);line-height:1.1;margin:0 0 8px;font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.2rem;margin:0 0 8px;font-weight:800}
+h3{font-size:1rem;margin:14px 0 4px}
+.lede{color:var(--mute);margin:0 0 18px;max-width:64ch}
+.seg{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.seg button{flex:1;min-width:110px;padding:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.two{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:640px){.two{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.card.A{border-top:5px solid var(--a)}.card.B{border-top:5px solid var(--b)}
+.f{display:grid;grid-template-columns:1fr 130px;gap:8px;align-items:center;padding:6px 0}
+.f label{font-size:.93rem}
+input,select{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.f input{text-align:right}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.big{font-size:2rem;font-weight:800;line-height:1.1}
+.sub{color:var(--mute);font-size:.88rem}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+td,th{padding:7px 0;border-top:1px solid var(--line);text-align:right}
+td:first-child,th:first-child{text-align:left;color:var(--mute)}
+th{border-top:0;font-weight:800}th.a{color:var(--a)}th.b{color:var(--b)}
+.bar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--line);margin-top:8px}
+.bar i{display:block}.bar .p{background:var(--acc)}.bar .x{background:#d9534f}
+.verdict{background:var(--goodbg);color:var(--good);border-radius:10px;padding:14px;font-weight:600;margin-bottom:16px}
+.verdict small{display:block;font-weight:400;margin-top:4px}
+.copy{background:none;border:1px solid var(--acc);color:var(--acc);border-radius:8px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer}
+.note{font-size:.85rem;color:var(--mute)}
+section.g p{max-width:70ch}
+</style>
+</head>
+<body>
+<main>
+<h1>Loan calculator Malaysia</h1>
+<p class="lede">Compare two car, home or personal loan offers side by side. See the monthly instalment, the total interest, and the true rate hiding behind a flat rate.</p>
+<div class="seg" role="group" aria-label="Loan type"><button data-p="car" aria-pressed="true">Car loan</button><button data-p="personal" aria-pressed="false">Personal loan</button><button data-p="home" aria-pressed="false">Home loan</button></div>
+<div class="two" id="ins"></div>
+<div id="vd" class="verdict"></div>
+<div class="card"><h2>Comparison</h2>
+<table id="tb"></table>
+<div class="note" style="margin-top:10px">Bar: <b style="color:var(--acc)">principal</b> and <b style="color:#d9534f">interest</b> as a share of everything you repay.</div></div>
+<button class="copy" id="cp">Copy link to this comparison</button>
+<section class="g" style="margin-top:28px">
+<h2>Flat rate vs reducing balance</h2>
+<p>Most Malaysian car and personal loans quote a <b>flat rate</b>. Interest is worked out on the full original loan for the whole tenure, even though you keep paying the balance down. Home loans use a <b>reducing balance</b> rate, where interest is charged only on what you still owe.</p>
+<p>That is why a 3% flat rate is not the same as a 3% home loan rate. The real (effective) rate on a flat-rate loan is usually much higher, often close to double on a long tenure. Always compare offers on the true rate and the total you repay, not the headline number.</p>
+<h2 style="margin-top:20px">How to compare two loan offers</h2>
+<h3>Look at total repayment, not just the monthly amount</h3>
+<p>A longer tenure lowers the monthly instalment but usually costs more in total interest. Put a longer and a shorter offer side by side to see the difference in ringgit.</p>
+<h3>Check what is not included</h3>
+<p>This calculator covers principal and interest only. Stamp duty, legal fees, insurance or takaful, and any processing fees are extra, so ask the bank for the full cost.</p>
+<h2 style="margin-top:20px">Frequently asked questions</h2>
+<h3>How is a car loan calculated in Malaysia?</h3>
+<p>Total interest is the loan amount times the flat rate times the number of years. Add it to the loan, then divide by the number of months to get your monthly instalment.</p>
+<h3>Is a home loan flat rate or reducing balance?</h3>
+<p>Home loans in Malaysia are normally reducing balance, so interest falls as your balance falls.</p>
+<h3>Does this work for Islamic financing?</h3>
+<p>You can use the profit rate in place of the interest rate to estimate payments. Some Islamic products work differently, so confirm the exact figures with your bank.</p>
+</section>
+<p class="note" style="margin-top:20px">Estimates only, not a loan offer or financial advice. Your bank's figures may differ because of rounding, fees, rate changes or how they calculate. Check the final numbers in your loan agreement.</p>
+</main>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How is a car loan calculated in Malaysia?","acceptedAnswer":{"@type":"Answer","text":"Total interest is the loan amount times the flat rate times the number of years. Add it to the loan, then divide by the number of months to get the monthly instalment."}},{"@type":"Question","name":"Is a home loan flat rate or reducing balance?","acceptedAnswer":{"@type":"Answer","text":"Home loans in Malaysia are normally reducing balance, so interest falls as the balance falls."}},{"@type":"Question","name":"What is the difference between a flat rate and an effective rate?","acceptedAnswer":{"@type":"Answer","text":"A flat rate charges interest on the full original loan for the whole tenure. The effective rate is the true yearly cost once you account for the balance reducing, and it is usually much higher than the flat rate."}}]}</script>
+<script>
+var $=function(i){return document.getElementById(i)};
+var PRE={car:{a:[60000,3.2,9,"f"],b:[60000,2.8,7,"f"]},personal:{a:[20000,5,5,"f"],b:[20000,6.5,3,"f"]},home:{a:[400000,4.2,35,"r"],b:[400000,4.2,30,"r"]}};
+var FL=[["amt","Loan amount (RM)"],["rate","Rate (% per year)"],["yrs","Tenure (years)"]];
+function build(k,t){var c=document.createElement("div");c.className="card "+t;var h=document.createElement("h2");h.textContent="Offer "+t;c.appendChild(h);
+FL.forEach(function(f){var d=document.createElement("div");d.className="f";var l=document.createElement("label");l.htmlFor=k+"-"+f[0];l.textContent=f[1];
+var i=document.createElement("input");i.id=k+"-"+f[0];i.type="number";i.inputMode="decimal";i.step="any";i.min="0";i.oninput=calc;d.appendChild(l);d.appendChild(i);c.appendChild(d)});
+var d=document.createElement("div");d.className="f";var l=document.createElement("label");l.htmlFor=k+"-m";l.textContent="Method";
+var s=document.createElement("select");s.id=k+"-m";s.onchange=calc;[["f","Flat rate"],["r","Reducing balance"]].forEach(function(o){var op=document.createElement("option");op.value=o[0];op.textContent=o[1];s.appendChild(op)});
+d.appendChild(l);d.appendChild(s);c.appendChild(d);$("ins").appendChild(c)}
+build("a","A");build("b","B");
+function setV(k,v){$(k+"-amt").value=v[0];$(k+"-rate").value=v[1];$(k+"-yrs").value=v[2];$(k+"-m").value=v[3]}
+function preset(p){document.querySelectorAll(".seg button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.p===p)});setV("a",PRE[p].a);setV("b",PRE[p].b);calc()}
+document.querySelectorAll(".seg button").forEach(function(b){b.onclick=function(){preset(b.dataset.p)}});
+function rm(x){return "RM"+x.toLocaleString("en-MY",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function one(k){var P=+$(k+"-amt").value,r=+$(k+"-rate").value,y=+$(k+"-yrs").value,mt=$(k+"-m").value,n=Math.round(y*12);
+if(!(P>0)||!(n>0))return null;var m,tot,eir;
+if(mt==="f"){tot=P+P*r/100*y;m=tot/n;eir=0;
+if(m>P/n+1e-9){var lo=1e-9,hi=0.5;for(var j=0;j<100;j++){var i=(lo+hi)/2,v=m*(1-Math.pow(1+i,-n))/i;if(v>P)lo=i;else hi=i}eir=12*lo*100}}
+else{var i2=r/1200;m=i2?P*i2/(1-Math.pow(1+i2,-n)):P/n;tot=m*n;eir=r}
+return{P:P,r:r,y:y,mt:mt,n:n,m:m,tot:tot,int:tot-P,eir:eir}}
+function calc(){
+var A=one("a"),B=one("b"),tb=$("tb");tb.innerHTML="";
+function row(l,a,b,h){var tr=document.createElement("tr");[l,a,b].forEach(function(t,ix){var c=document.createElement(h?"th":"td");if(h&&ix===1)c.className="a";if(h&&ix===2)c.className="b";c.textContent=t;tr.appendChild(c)});tb.appendChild(tr)}
+function bar(o){return o}
+row("","Offer A","Offer B",true);
+var g=function(o,f){return o?f(o):"-"};
+row("Monthly instalment",g(A,function(o){return rm(o.m)}),g(B,function(o){return rm(o.m)}));
+row("Total interest",g(A,function(o){return rm(o.int)}),g(B,function(o){return rm(o.int)}));
+row("Total repayment",g(A,function(o){return rm(o.tot)}),g(B,function(o){return rm(o.tot)}));
+row("True yearly rate",g(A,function(o){return o.eir.toFixed(2)+"%"}),g(B,function(o){return o.eir.toFixed(2)+"%"}));
+row("Number of payments",g(A,function(o){return o.n}),g(B,function(o){return o.n}));
+var tr=document.createElement("tr"),c0=document.createElement("td");c0.textContent="Principal vs interest";tr.appendChild(c0);
+[A,B].forEach(function(o){var c=document.createElement("td");if(o){var b=document.createElement("div");b.className="bar";var p=document.createElement("i"),x=document.createElement("i");p.className="p";x.className="x";p.style.width=(o.P/o.tot*100)+"%";x.style.width=(o.int/o.tot*100)+"%";b.appendChild(p);b.appendChild(x);c.appendChild(b)}tr.appendChild(c)});tb.appendChild(tr);
+var v=$("vd");v.innerHTML="";
+if(!A||!B){v.textContent="Enter an amount and tenure for both offers.";v.style.background="var(--accbg)";v.style.color="var(--acc)"}
+else{v.style.background="";v.style.color="";var d=B.tot-A.tot,dm=B.m-A.m,w=d>0.5?"A":d<-0.5?"B":"";
+var s=document.createElement("small");
+if(!w){v.textContent="Both offers cost about the same in total.";s.textContent="Check the monthly instalment and tenure to see which suits your budget.";}
+else{var cheap=w==="A"?A:B,oth=w==="A"?B:A,sv=Math.abs(d),mm=cheap.m-oth.m;
+v.textContent="Offer "+w+" costs "+rm(sv)+" less in total.";
+s.textContent="Its monthly instalment is "+rm(Math.abs(mm))+(mm>0?" higher":" lower")+" than Offer "+(w==="A"?"B":"A")+". "+(mm>0?"If that fits your budget, it saves money overall.":"It is cheaper both monthly and overall.")}
+v.appendChild(s)}
+try{var q=function(k){return [$(k+"-amt").value,$(k+"-rate").value,$(k+"-yrs").value,$(k+"-m").value].join(",")};history.replaceState(null,"","#a="+q("a")+"&b="+q("b"))}catch(e){}}
+$("cp").onclick=function(){var b=this,o=b.textContent,d=function(){b.textContent="Link copied";setTimeout(function(){b.textContent=o},1500)};
+try{navigator.clipboard.writeText(location.href).then(d,function(){})}catch(e){}};
+(function(){var h=location.hash.slice(1),ok=false;
+if(h){try{h.split("&").forEach(function(p){var kv=p.split("="),k=kv[0],a=(kv[1]||"").split(",");if((k==="a"||k==="b")&&a.length===4){setV(k,a);ok=true}})}catch(e){}}
+if(ok)calc();else preset("car")})();
+</script>
+</body>
+</html>

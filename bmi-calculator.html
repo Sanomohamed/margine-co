@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BMI Calculator with Diet and Activity Plan (Malaysia)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f4f8f4;--card:#fff;--ink:#17301d;--mute:#58705d;--line:#d7e3d8;--acc:#2f7d32;--accbg:#e0f1e1;--u:#2b6cb0;--h:#2f7d32;--o:#b7791f;--b:#c0392b;--warnbg:#fdf0d2;--warn:#8a5a00;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1b12;--card:#17281a;--ink:#e5f2e7;--mute:#a0b8a4;--line:#2b422e;--acc:#7fd183;--accbg:#1b3a1e;--u:#6aa9f0;--h:#7fd183;--o:#f0b84c;--b:#ff8f80;--warnbg:#3a2f12;--warn:#f1c45e}}
+:root[data-theme="dark"]{--bg:#0f1b12;--card:#17281a;--ink:#e5f2e7;--mute:#a0b8a4;--line:#2b422e;--acc:#7fd183;--accbg:#1b3a1e;--u:#6aa9f0;--h:#7fd183;--o:#f0b84c;--b:#ff8f80;--warnbg:#3a2f12;--warn:#f1c45e}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:26px 16px 56px}
+h1{font-size:clamp(1.8rem,5vw,2.4rem);line-height:1.1;margin:0 0 8px;font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.1rem;margin:0 0 8px;font-weight:800}
+.lede{color:var(--mute);margin:0 0 18px;max-width:62ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg .w{grid-column:1/-1}
+label.l{display:block;font-weight:600;font-size:.92rem;margin-bottom:3px}
+input,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.hint{font-size:.82rem;color:var(--mute);margin-top:2px}
+button{font:inherit;font-weight:600;background:var(--acc);color:var(--bg);border:0;border-radius:8px;padding:11px 20px;cursor:pointer}
+button.sec{background:none;color:var(--acc);border:1px solid var(--acc)}
+.err{color:var(--b);font-weight:600;margin-top:10px}
+.big{font-size:3rem;font-weight:800;line-height:1}
+.pill{display:inline-block;padding:3px 12px;border-radius:99px;font-weight:700;color:#fff;margin-left:8px;font-size:.95rem;vertical-align:middle}
+.u{background:var(--u)}.h{background:var(--h);color:#06210a}.o{background:var(--o);color:#2a1c00}.b{background:var(--b);color:#2d0a05}
+.gauge{position:relative;display:flex;height:12px;border-radius:6px;overflow:hidden;margin:16px 0 6px}
+.gauge i{display:block}
+.mk{position:absolute;top:-4px;width:4px;height:20px;background:var(--ink);border-radius:2px;transform:translateX(-2px)}
+.sc{position:relative;height:1.3em;font-size:.78rem;color:var(--mute)}
+.sc span{position:absolute;transform:translateX(-50%)}
+.warn{background:var(--warnbg);color:var(--warn);border-radius:8px;padding:12px 14px;font-weight:600;margin:12px 0}
+ul.t{margin:6px 0 0;padding-left:20px}ul.t li{margin:5px 0}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+td{padding:7px 0;border-top:1px solid var(--line);vertical-align:top}td:first-child{width:76px;font-weight:600}
+.note{font-size:.85rem;color:var(--mute)}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+</style>
+</head>
+<body>
+<main>
+<h1>BMI calculator and health plan</h1>
+<p class="lede">Check your body mass index using Malaysian (Asian) cut-offs, then get a simple diet and activity plan you can download. Your numbers stay on your device.</p>
+<div class="card">
+<div class="fg">
+<div><label class="l" for="age">Age (years)</label><input id="age" type="number" inputmode="numeric" min="1" max="120" placeholder="e.g. 32"></div>
+<div><label class="l" for="sex">Sex</label><select id="sex"><option value="m">Male</option><option value="f">Female</option></select></div>
+<div><label class="l" for="ht">Height (cm)</label><input id="ht" type="number" inputmode="decimal" min="1" placeholder="e.g. 165"></div>
+<div><label class="l" for="wt">Weight (kg)</label><input id="wt" type="number" inputmode="decimal" min="1" placeholder="e.g. 68"></div>
+<div><label class="l" for="wc">Waist (cm), optional</label><input id="wc" type="number" inputmode="decimal" min="1" placeholder="Around your navel"><div class="hint">Measure after breathing out.</div></div>
+<div><label class="l" for="ac">Your activity now</label><select id="ac"><option value="a">Mostly sitting</option><option value="b" selected>Some activity</option><option value="c">Already active</option></select></div>
+<div class="w"><button id="go">Calculate and get my plan</button><div class="err" id="er" role="alert"></div></div>
+</div>
+</div>
+<div id="rs" hidden>
+<div class="card"><h2>Your result</h2><div><span class="big" id="bv"></span><span class="pill" id="bc"></span></div>
+<div class="gauge" id="gg" aria-hidden="true"></div><div class="sc" aria-hidden="true"><span style="left:0;transform:none">15</span><span style="left:17.5%">18.5</span><span style="left:40%">23</span><span style="left:62.5%">27.5</span><span style="right:0;transform:none">35+</span></div>
+<p id="rg" style="margin:12px 0 0"></p><p id="wm" style="margin:6px 0 0"></p><div id="fl"></div></div>
+<div class="card"><h2>Eating plan</h2><ul class="t" id="dt"></ul></div>
+<div class="card"><h2>Weekly activity plan</h2><p class="note" id="ap" style="margin:0 0 6px"></p><table id="pl"></table></div>
+<div class="card"><div class="acts"><button id="dl">Download my result (PDF)</button><button class="sec" onclick="window.print()">Print</button></div></div>
+</div>
+<p class="note"><b>Please note:</b> BMI is a screening tool, not a diagnosis. It does not measure body fat or muscle, and it is not suitable for children and teens, pregnant women, or very muscular people. This plan is general guidance, not medical advice. If you have a health condition, take medicine, or feel worried about your weight or eating, speak to a doctor or dietitian. Categories follow Malaysian clinical guidelines (overweight from 23, obese from 27.5; waist 90 cm men, 80 cm women).</p>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+var $=function(i){return document.getElementById(i)},R=null;
+var CATS=[{m:18.5,k:"Underweight",c:"u"},{m:23,k:"Healthy weight",c:"h"},{m:27.5,k:"Overweight (at risk)",c:"o"},{m:1e9,k:"Obese",c:"b"}];
+var BASE=["Use the Malaysian Healthy Plate (Suku-Suku-Separuh): fill 1/2 of your plate with vegetables and fruit, 1/4 with carbohydrates such as rice, noodles or bread, and 1/4 with protein such as fish, chicken, egg, tempeh, tofu or dhal.","Aim for at least 2 servings of fruit and 3 servings of vegetables each day.","Drink plain water most of the time. Ask for kurang manis or no sugar in teh, kopi and sirap.","Eat regular meals. Try not to skip breakfast."];
+var DIET={
+u:["Add 2 or 3 nutritious snacks a day, such as eggs, nuts, tempeh, banana, yoghurt or milk.","Include protein at every meal, and healthy fats such as avocado, nuts and fish.","Do not rely on fast food or sweet drinks to gain weight. Choose foods that also give vitamins and fibre.","See a doctor to check for a medical cause, especially if you lost weight without trying."],
+h:["Keep variety: different colours of vegetables and fruit, and different protein foods through the week.","Choose steamed, boiled, grilled or stir-fried dishes more often than deep-fried ones.","Enjoy favourites like nasi lemak, roti canai and kuih in sensible portions, not every day."],
+o:["Make rice or noodles about 1/4 of your plate and fill the rest with vegetables and protein.","Cut back on sweet drinks, deep-fried snacks (goreng pisang, keropok, karipap) and extra santan or oily gravy.","At hawker stalls, choose grilled, steamed or soup dishes, and ask for less oil, sugar and gravy.","Make small changes that you can keep. Avoid crash diets, which are hard to sustain and can harm your health.","A dietitian at a health clinic can help you plan meals that suit your budget and culture."],
+b:["Make rice or noodles about 1/4 of your plate and fill the rest with vegetables and protein.","Cut back on sweet drinks, deep-fried snacks, and extra santan or oily gravy. Go slowly: one change at a time.","Avoid crash diets or skipping meals. They are hard to sustain and can harm your health.","Please book a visit to a health clinic or dietitian for a plan that fits you, and to check blood sugar, blood pressure and cholesterol."]};
+var P={a:[["Mon","Brisk walk 15 min"],["Tue","Rest, gentle stretching"],["Wed","Brisk walk 15 min"],["Thu","Rest, gentle stretching"],["Fri","Brisk walk 15 min"],["Sat","Walk 20 min with family or friends"],["Sun","Rest"]],
+b:[["Mon","Brisk walk or cycle 30 min"],["Tue","Strength 20 to 30 min (squats, wall push-ups, resistance band)"],["Wed","Brisk walk or cycle 30 min"],["Thu","Rest, gentle stretching"],["Fri","Strength 20 to 30 min"],["Sat","Active fun 30 to 45 min (badminton, swimming, hiking)"],["Sun","Rest or easy walk"]],
+c:[["Mon","Cardio 30 to 45 min"],["Tue","Strength 30 min"],["Wed","Cardio 30 to 45 min"],["Thu","Strength 30 min"],["Fri","Cardio 30 to 45 min"],["Sat","Longer activity 60 min (sport, hike, long ride)"],["Sun","Easy walk and stretching"]]};
+function fmt(n){return n.toFixed(1)}
+function calc(){
+var age=+$("age").value,h=+$("ht").value,w=+$("wt").value,wc=+$("wc").value,sx=$("sex").value,ac=$("ac").value,er=$("er");er.textContent="";
+if(!age||!h||!w){er.textContent="Please enter your age, height and weight.";return}
+if(age<18){er.textContent="This tool is for adults aged 18 and over. For children and teens, ask a doctor or clinic to use a growth chart.";$("rs").hidden=true;return}
+if(h<100||h>250||w<25||w>300){er.textContent="Please check your height (in cm) and weight (in kg).";return}
+var m=h/100,bmi=w/(m*m),cat=CATS.filter(function(c){return bmi<c.m})[0],lo=18.5*m*m,hi=22.9*m*m,wm="",wh=false;
+if(wc){var lim=sx==="m"?90:80;wh=wc>=lim;wm="Waist "+wc+" cm: "+(wh?"at or above the Malaysian cut-off of "+lim+" cm, which raises health risk. Extra weight around the middle matters.":"below the Malaysian cut-off of "+lim+" cm. Good.")}
+var d=BASE.slice();if(cat.c==="u")d=[BASE[0],BASE[1],BASE[3]];d=d.concat(DIET[cat.c]);
+var pl=P[ac].map(function(r){return r.slice()});
+var ap="Aim for at least 150 minutes of moderate activity each week, plus muscle-strengthening on 2 or more days.";
+if(ac==="a")ap="Start gently with the plan below. Add about 5 minutes to each walk every week until you reach 30 minutes, 5 days a week. Also stand up and move for a few minutes every hour.";
+else if(cat.c==="o"||cat.c==="b")ap="Build up to at least 150 minutes of moderate activity a week. Malaysian guidelines suggest working towards 300 minutes a week for weight loss, plus strength work on 2 or more days. Low-impact options like brisk walking, swimming and cycling are kind to the joints.";
+else if(cat.c==="u")ap="Focus on strength training 2 to 3 days a week to build muscle, and keep cardio light so you do not burn too much energy. Eat well around your sessions.";
+var fl=bmi<17||bmi>=35?"Your BMI is outside the range where self-guided changes are enough. Please arrange a check-up with a doctor or dietitian soon.":"";
+R={age:age,sex:sx==="m"?"Male":"Female",h:h,w:w,wc:wc,bmi:bmi,cat:cat,rg:"A BMI of 18.5 to 22.9 for your height is about "+Math.round(lo)+" to "+Math.round(hi)+" kg. Use this as a reference, not a target to reach quickly.",wm:wm,d:d,pl:pl,ap:ap,fl:fl,date:new Date().toLocaleDateString("en-MY",{day:"numeric",month:"long",year:"numeric"})};
+draw()}
+function draw(){
+var r=R;$("rs").hidden=false;$("bv").textContent=fmt(r.bmi);var p=$("bc");p.textContent=r.cat.k;p.className="pill "+r.cat.c;
+var g=$("gg");g.innerHTML="";[[18.5-15,"u"],[23-18.5,"h"],[27.5-23,"o"],[35-27.5,"b"]].forEach(function(s){var i=document.createElement("i");i.style.width=(s[0]/20*100)+"%";i.style.background="var(--"+s[1]+")";g.appendChild(i)});
+var mk=document.createElement("div");mk.className="mk";mk.style.left=Math.max(0,Math.min(100,(r.bmi-15)/20*100))+"%";g.appendChild(mk);
+$("rg").textContent=r.rg;$("wm").textContent=r.wm;
+var f=$("fl");f.innerHTML="";if(r.fl){var x=document.createElement("div");x.className="warn";x.textContent=r.fl;f.appendChild(x)}
+var u=$("dt");u.innerHTML="";r.d.forEach(function(t){var li=document.createElement("li");li.textContent=t;u.appendChild(li)});
+$("ap").textContent=r.ap;var tb=$("pl");tb.innerHTML="";
+r.pl.forEach(function(a){var tr=document.createElement("tr"),x=document.createElement("td"),y=document.createElement("td");x.textContent=a[0];y.textContent=a[1];tr.appendChild(x);tr.appendChild(y);tb.appendChild(tr)});
+$("rs").scrollIntoView({behavior:"smooth",block:"start"})}
+function lines(){var r=R,L=[["Your BMI result",20,1],["Prepared on "+r.date,10,0],["",8,0],
+["Details: "+r.sex+", age "+r.age+", height "+r.h+" cm, weight "+r.w+" kg"+(r.wc?", waist "+r.wc+" cm":""),11,0],
+["BMI: "+fmt(r.bmi)+" - "+r.cat.k,15,1],[r.rg,11,0]];
+if(r.wm)L.push([r.wm,11,0]);if(r.fl)L.push([r.fl,11,1]);
+L.push(["",8,0],["Eating plan",14,1]);r.d.forEach(function(t){L.push(["- "+t,11,0])});
+L.push(["",8,0],["Weekly activity plan",14,1],[r.ap,11,0]);r.pl.forEach(function(a){L.push([a[0]+": "+a[1],11,0])});
+L.push(["",8,0],["BMI is a screening tool, not a diagnosis. This plan is general guidance, not medical advice. Speak to a doctor or dietitian if you have a health condition, take medicine, or are worried about your weight or eating. Categories follow Malaysian clinical guidelines (overweight from 23, obese from 27.5; waist 90 cm men, 80 cm women).",9,0]);return L}
+function save(blob,name){var u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(u)},1000)}
+$("dl").onclick=function(){if(!R)return;var L=lines(),name="bmi-result.";
+if(window.jspdf){var d=new jspdf.jsPDF({unit:"pt",format:"a4"}),M=48,mw=d.internal.pageSize.getWidth()-2*M,y=M;
+L.forEach(function(l){d.setFont("helvetica",l[2]?"bold":"normal");d.setFontSize(l[1]);d.splitTextToSize(l[0]||" ",mw).forEach(function(t){if(y>790){d.addPage();y=M}d.text(t,M,y);y+=l[1]*1.45})});
+d.save(name+"pdf")}
+else save(new Blob([L.map(function(l){return l[0]}).join("\n")],{type:"text/plain"}),name+"txt")};
+$("go").onclick=calc;
+</script>
+</body>
+</html>
