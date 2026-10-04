@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MyInvois e-Invoice Starter Kit for Small Sellers</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f6f8f7;--card:#fff;--ink:#14302f;--mute:#566a69;--line:#d5dfdd;--acc:#0c6e6b;--accbg:#e1f1ef;--warn:#8a5a00;--warnbg:#fdf0d2;--ok:#16603a;--okbg:#dff3e6;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1c1c;--card:#172928;--ink:#e6f1ef;--mute:#9db3b0;--line:#2b4543;--acc:#4fc3bd;--accbg:#18403f;--warn:#f1c45e;--warnbg:#3a2f12;--ok:#7fd9a2;--okbg:#17372a}}
+:root[data-theme="dark"]{--bg:#0f1c1c;--card:#172928;--ink:#e6f1ef;--mute:#9db3b0;--line:#2b4543;--acc:#4fc3bd;--accbg:#18403f;--warn:#f1c45e;--warnbg:#3a2f12;--ok:#7fd9a2;--okbg:#17372a}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:28px 18px 56px}
+h1{font-size:clamp(1.9rem,6vw,2.6rem);line-height:1.1;margin:0 0 10px;font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.35rem;margin:0 0 6px;font-weight:800}
+p{margin:0 0 12px}
+.lede{color:var(--mute);max-width:60ch}
+.stamp{display:inline-block;background:var(--accbg);color:var(--acc);border-radius:6px;padding:3px 10px;font-size:.85rem;font-weight:600;margin-bottom:14px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-top:22px}
+label{display:block;font-weight:600;margin:12px 0 4px}
+select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.chk{display:flex;gap:10px;align-items:flex-start;font-weight:400;margin:12px 0}
+.chk input{margin-top:6px;width:18px;height:18px;accent-color:var(--acc);flex:none}
+.res{margin-top:14px;padding:12px 14px;border-radius:8px;font-weight:600}
+.res.ok{background:var(--okbg);color:var(--ok)}.res.warn{background:var(--warnbg);color:var(--warn)}.res.must{background:var(--accbg);color:var(--acc)}
+.res small{display:block;font-weight:400;margin-top:4px}
+ul.todo{list-style:none;padding:0;margin:8px 0 0}
+ul.todo li{border-top:1px solid var(--line)}
+ul.todo label{display:flex;gap:10px;align-items:flex-start;font-weight:400;margin:0;padding:11px 0;cursor:pointer}
+ul.todo input{margin-top:5px;width:18px;height:18px;accent-color:var(--acc);flex:none}
+ul.todo input:checked+span{color:var(--mute);text-decoration:line-through}
+ul.todo b{font-weight:600}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:6px 0 4px}
+.bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .25s}
+pre{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;font:.9rem/1.5 ui-monospace,Menlo,Consolas,monospace;margin:8px 0;overflow-x:auto}
+button{font:inherit;font-weight:600;background:var(--acc);color:var(--bg);border:0;border-radius:8px;padding:8px 16px;cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.note{font-size:.88rem;color:var(--mute);margin-top:16px}
+</style>
+</head>
+<body>
+<main>
+<span class="stamp">Rules checked 4 Oct 2026 · LHDN Guideline v4.8</span>
+<h1>MyInvois e-invoice starter kit</h1>
+<p class="lede">A plain-language checklist and copy-ready templates for small sellers in Malaysia. Start by finding out whether you need to issue e-invoices at all.</p>
+
+<section>
+<h2>Do I need to issue e-invoices?</h2>
+<label for="t">Your annual turnover (sales)</label>
+<select id="t"><option value="">Choose…</option><option value="a">Below RM3 million</option><option value="b">RM3 million to RM5 million</option><option value="c">Above RM5 million</option></select>
+<label class="chk"><input type="checkbox" id="g"><span>A shareholder that is a company, a holding company, a related company or a joint venture partner has turnover of RM3 million or more</span></label>
+<div id="r" class="res" hidden></div>
+</section>
+
+<section>
+<h2>Setup checklist</h2>
+<p class="lede">Ticks are saved on this device.</p>
+<div class="bar"><i id="pb"></i></div><p id="pt" class="note" style="margin:0 0 6px"></p>
+<ul class="todo" id="list"></ul>
+</section>
+
+<section>
+<h2>Template: ask buyers for their details</h2>
+<p>Send this by WhatsApp or email before you issue the first invoice.</p>
+<pre id="m1">Hi! To issue your e-invoice, please send:
+1. Registered name (as per SSM / IC)
+2. TIN (Tax Identification Number)
+3. BRN or NRIC number
+4. SST registration number (if any)
+5. Business address
+6. Phone and email
+Thank you!</pre>
+<button data-c="m1">Copy English</button>
+<pre id="m2">Hai! Untuk mengeluarkan e-invois, sila hantar:
+1. Nama berdaftar (mengikut SSM / IC)
+2. TIN (Nombor Pengenalan Cukai)
+3. No. BRN atau NRIC
+4. No. pendaftaran SST (jika ada)
+5. Alamat perniagaan
+6. No. telefon dan emel
+Terima kasih!</pre>
+<button data-c="m2">Copy Bahasa Malaysia</button>
+</section>
+
+<section>
+<h2>Template: invoice data sheet</h2>
+<p>MyInvois asks for around 55 data fields. Keep these ready for every sale, in a spreadsheet or your accounting software.</p>
+<pre id="m3">SELLER (you, saved once)
+- Registered name, TIN, BRN/NRIC
+- MSIC business activity code
+- SST registration no. (if registered)
+- Address, phone, email
+
+BUYER (per customer)
+- Registered name, TIN, BRN/NRIC, SST no.
+- Address, phone, email
+
+INVOICE
+- Your own invoice number (unique, never reused)
+- Issue date and time
+- Currency (MYR) and payment method
+
+EACH LINE ITEM
+- Description, classification code
+- Quantity, unit price, discount
+- Tax type and rate
+
+TOTALS
+- Total excluding tax, tax amount
+- Total including tax, amount payable</pre>
+<button data-c="m3">Copy data sheet</button>
+</section>
+
+<p class="note">This kit is general information, not tax advice. LHDN has revised dates and thresholds several times, and sources disagree on when the penalty-free relaxation period ends. Confirm with the official LHDN e-Invoice guideline or your tax agent before relying on any date.</p>
+</main>
+<script>
+var items=[
+["Confirm you are in scope","Use the check above. If you are exempt, you can still choose to take part."],
+["Find your TIN","Check your tax number on MyTax. Your buyers will need to give you theirs too."],
+["Register on the MyInvois Portal","Set up your company profile and confirm your details are correct."],
+["Choose how you will submit","Free portal (manual, fine for low volume), accounting or POS software, or API for high volume."],
+["Find your MSIC code","This describes your business activity and is needed on your invoices."],
+["Collect buyer details","Send the template above to your regular customers."],
+["Issue a test invoice","Submit one sample so you see how validation works before it matters."],
+["Learn the 72-hour rule","An issued e-invoice can be cancelled within 72 hours. After that you need a credit or debit note."],
+["Plan for walk-in (B2C) sales","Check LHDN's consolidated e-invoice rules for customers who do not give details."],
+["Keep records","Store invoice copies and validation records, as you would any tax document."]
+];
+var KEY="myinvoisKit",st={};
+try{st=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){st={}}
+var ul=document.getElementById("list");
+items.forEach(function(it,i){
+var li=document.createElement("li"),lb=document.createElement("label"),cb=document.createElement("input"),sp=document.createElement("span");
+cb.type="checkbox";cb.checked=!!st[i];
+sp.innerHTML="<b></b><br><small></small>";sp.firstChild.textContent=it[0];sp.lastChild.textContent=it[1];sp.lastChild.style.color="var(--mute)";
+cb.onchange=function(){st[i]=cb.checked;try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}prog()};
+lb.appendChild(cb);lb.appendChild(sp);li.appendChild(lb);ul.appendChild(li)});
+function prog(){var n=items.filter(function(_,i){return st[i]}).length;
+document.getElementById("pb").style.width=(n/items.length*100)+"%";
+document.getElementById("pt").textContent=n+" of "+items.length+" done"}
+prog();
+var t=document.getElementById("t"),g=document.getElementById("g"),r=document.getElementById("r");
+function check(){
+if(!t.value){r.hidden=true;return}
+var c,m,s;
+if(t.value==="c"){c="must";m="You need to issue e-invoices.";s="Above RM5 million falls under the earlier phases (Phase 1 to 3), so you should already be live."}
+else if(t.value==="b"){c="must";m="You need to issue e-invoices.";s="RM3 million to RM5 million is in Phase 4, which started 1 January 2026. Check LHDN for your relaxation period."}
+else if(g.checked){c="warn";m="You may NOT qualify for the exemption.";s="Being under RM3 million is not enough when a company shareholder, holding company, related company or joint venture has turnover of RM3 million or more. Check Section 1.6.10 of the LHDN guideline with your tax agent."}
+else{c="ok";m="You may be exempt.";s="Under RM3 million with no linked entities of RM3 million or more, you may qualify, with no application to LHDN. If you already issue e-invoices, check LHDN's latest guidance before switching off. Joining voluntarily is encouraged."}
+r.className="res "+c;r.innerHTML="";r.appendChild(document.createTextNode(m));
+var sm=document.createElement("small");sm.textContent=s;r.appendChild(sm);r.hidden=false}
+t.onchange=check;g.onchange=check;
+document.querySelectorAll("button[data-c]").forEach(function(b){b.onclick=function(){
+var tx=document.getElementById(b.dataset.c).textContent,o=b.textContent;
+function done(){b.textContent="Copied";setTimeout(function(){b.textContent=o},1500)}
+try{navigator.clipboard.writeText(tx).then(done,fb)}catch(e){fb()}
+function fb(){var a=document.createElement("textarea");a.value=tx;document.body.appendChild(a);a.select();try{document.execCommand("copy");done()}catch(e){}document.body.removeChild(a)}}});
+</script>
+</body>
+</html>

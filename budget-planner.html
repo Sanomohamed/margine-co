@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Monthly Budget Planner (Malaysia)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1c2340;--mute:#5d6683;--line:#dde1ee;--acc:#3a4db0;--accbg:#e6e9f8;--good:#16603a;--goodbg:#dff3e6;--bad:#a02323;--badbg:#fbe4e2;--warn:#8a5a00;--warnbg:#fdf0d2;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121528;--card:#1b2038;--ink:#e8ebfa;--mute:#a3abc9;--line:#2e3558;--acc:#9aa8ff;--accbg:#2a3160;--good:#7fd9a2;--goodbg:#17372a;--bad:#ff9d94;--badbg:#401d1b;--warn:#f1c45e;--warnbg:#3a2f12}}
+:root[data-theme="dark"]{--bg:#121528;--card:#1b2038;--ink:#e8ebfa;--mute:#a3abc9;--line:#2e3558;--acc:#9aa8ff;--accbg:#2a3160;--good:#7fd9a2;--goodbg:#17372a;--bad:#ff9d94;--badbg:#401d1b;--warn:#f1c45e;--warnbg:#3a2f12}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:980px;margin:0 auto;padding:26px 16px 56px}
+h1{font-size:clamp(1.8rem,5vw,2.5rem);line-height:1.1;margin:0 0 8px;font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.05rem;margin:0 0 8px;font-weight:800}
+.lede{color:var(--mute);max-width:62ch;margin:0 0 18px}
+.grid{display:grid;grid-template-columns:1fr;gap:18px}
+@media(min-width:800px){.grid{grid-template-columns:1fr 1fr;align-items:start}.sticky{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.seg{display:flex;gap:6px;margin-bottom:16px}
+.seg button{flex:1;padding:10px 6px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.f{display:grid;grid-template-columns:1fr 112px;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line)}
+.f.first{border-top:0}
+.f label{font-size:.93rem}
+.f input{width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;text-align:right}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.big{padding:16px;border-radius:12px;margin-bottom:16px}
+.big.good{background:var(--goodbg);color:var(--good)}.big.bad{background:var(--badbg);color:var(--bad)}.big.low{background:var(--warnbg);color:var(--warn)}
+.big .n{font-size:2.3rem;font-weight:800;line-height:1.1}
+.big .s{font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+td{padding:6px 0;border-top:1px solid var(--line)}
+td+td{text-align:right;font-variant-numeric:tabular-nums}
+tr.t td{font-weight:800;border-top:2px solid var(--ink)}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:2px 0 8px}
+.bar i{display:block;height:100%;background:var(--acc)}
+.note{font-size:.85rem;color:var(--mute)}
+.reset{background:none;border:1px solid var(--line);color:var(--mute);border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer}
+</style>
+</head>
+<body>
+<main>
+<h1>Monthly budget planner</h1>
+<p class="lede">Plan your salary from the first of the month. Switch to Raya or school season to see how a big one-off cost changes your monthly budget.</p>
+<div class="grid">
+<div>
+<div class="seg" role="group" aria-label="Plan type"><button data-m="month" aria-pressed="true">Monthly</button><button data-m="raya" aria-pressed="false">Raya</button><button data-m="school" aria-pressed="false">School season</button></div>
+<div class="card"><h2>Income (after EPF, SOCSO and tax)</h2><div id="inc"></div></div>
+<div id="seas"></div>
+<div id="secs"></div>
+</div>
+<div class="sticky">
+<div id="big" class="big"><div class="s" id="bl"></div><div class="n" id="bn"></div><div class="s" id="bm"></div></div>
+<div class="card"><h2>Your plan</h2><table id="tb"></table></div>
+<div class="card"><h2>Compared with the 50/30/20 guide</h2><div id="gd"></div>
+<p class="note" style="margin:6px 0 0">A common rule of thumb: about 50% needs, 30% wants, 20% savings. Many Malaysian households support parents or repay loans, so adjust it to fit you.</p></div>
+<button class="reset" id="rs">Clear all numbers</button>
+</div>
+</div>
+<p class="note" style="margin-top:18px">Your numbers stay on this device and are never sent anywhere. This is a planning aid, not financial advice.</p>
+</main>
+<script>
+var SEC=[["needs","Needs",[["rent","Rent or housing loan"],["util","Utilities, phone and internet"],["groc","Groceries"],["trans","Transport (fuel, toll, loan, public)"],["ins","Insurance and medical"],["debt","Other loan or card repayments"],["fam","Family support (parents)"],["child","Childcare and school routine"]]],
+["wants","Wants",[["eat","Eating out and coffee"],["subs","Subscriptions"],["shop","Shopping"],["fun","Entertainment and hobbies"],["oth","Other"]]],
+["save","Savings",[["emg","Emergency fund"],["inv","Investments or voluntary EPF"],["goal","Other goals"]]]];
+var RAYA=[["r1","Baju raya and shoes (whole family)"],["r2","Food, kuih and hosting"],["r3","Duit raya"],["r4","Balik kampung travel (fuel, toll, tickets)"],["r5","Home decor and cleaning"],["r6","Zakat fitrah"],["r7","Gifts for family"]];
+var KID=[["k1","Uniforms and shoes"],["k2","Bag and stationery"],["k3","Books and workbooks"],["k4","School fees and activities"],["k5","Tuition"]];
+var KEY="budgetPlannerMY",V={mode:"month"};
+try{V=Object.assign(V,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(V))}catch(e){}}
+function g(id){var x=parseFloat(V[id]);return isNaN(x)?0:x}
+function rm(x){return (x<0?"-":"")+"RM"+Math.abs(x).toFixed(2)}
+function field(host,id,label,first){var d=document.createElement("div");d.className="f"+(first?" first":"");
+var l=document.createElement("label");l.htmlFor=id;l.textContent=label;
+var i=document.createElement("input");i.id=id;i.type="number";i.inputMode="decimal";i.step="any";i.min="0";i.value=V[id]===undefined?"":V[id];
+i.oninput=function(){V[id]=i.value;save();calc()};d.appendChild(l);d.appendChild(i);host.appendChild(d)}
+function card(title,list,note){var c=document.createElement("div");c.className="card";var h=document.createElement("h2");h.textContent=title;c.appendChild(h);
+list.forEach(function(f,n){field(c,f[0],f[1],n===0)});if(note){var p=document.createElement("p");p.className="note";p.style.margin="8px 0 0";p.textContent=note;c.appendChild(p)}return c}
+var inc=document.getElementById("inc");field(inc,"sal","Monthly take-home salary (RM)",true);field(inc,"oinc","Other income (RM)");
+var secs=document.getElementById("secs");SEC.forEach(function(s){secs.appendChild(card(s[1]+" (RM per month)",s[2]))});
+var seas=document.getElementById("seas"),cr=card("Raya costs (RM, one-off)",RAYA.concat([["rmon","Months left to save"]])),
+cs=card("School season costs (RM, one-off)",[["kids","Number of children"]].concat(KID.map(function(k){return [k[0],k[1]+" (per child)"]}),[["k6","Other school costs (all children)"],["smon","Months left to save"]]));
+seas.appendChild(cr);seas.appendChild(cs);
+function sum(l){return l.reduce(function(a,f){return a+g(f[0])},0)}
+function setMode(m){V.mode=m;save();document.querySelectorAll(".seg button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.m===m)});
+cr.hidden=m!=="raya";cs.hidden=m!=="school";calc()}
+document.querySelectorAll(".seg button").forEach(function(b){b.onclick=function(){setMode(b.dataset.m)}});
+document.getElementById("rs").onclick=function(){if(!confirm("Clear all numbers?"))return;var m=V.mode;V={mode:m};save();document.querySelectorAll("input").forEach(function(i){i.value=""});calc()};
+function tr(tb,a,b,c){var r=document.createElement("tr");if(c)r.className=c;var x=document.createElement("td"),y=document.createElement("td");x.textContent=a;y.textContent=b;r.appendChild(x);r.appendChild(y);tb.appendChild(r)}
+function calc(){
+var income=g("sal")+g("oinc"),t={};SEC.forEach(function(s){t[s[0]]=sum(s[2])});
+var planned=t.needs+t.wants+t.save,sea=0,months=1,label="";
+if(V.mode==="raya"){sea=sum(RAYA);months=Math.max(1,Math.floor(g("rmon"))||1);label="Raya"}
+if(V.mode==="school"){sea=Math.max(1,g("kids"))*sum(KID)+g("k6");months=Math.max(1,Math.floor(g("smon"))||1);label="School season"}
+var ms=sea/months,left=income-planned-ms;
+var big=document.getElementById("big");big.className="big "+(income<=0?"low":left<0?"bad":left<income*0.02?"low":"good");
+document.getElementById("bl").textContent="Left to allocate each month";
+document.getElementById("bn").textContent=rm(left);
+document.getElementById("bm").textContent=income<=0?"Enter your salary to start":left<0?"Over budget. Trim wants first, then adjust the rest.":left<income*0.02?"Almost fully planned. Good, but keep a small buffer.":"Give this a job: savings, debt or a buffer.";
+var tb=document.getElementById("tb");tb.innerHTML="";
+tr(tb,"Income",rm(income));tr(tb,"Needs","-"+rm(t.needs));tr(tb,"Wants","-"+rm(t.wants));tr(tb,"Savings","-"+rm(t.save));
+if(label)tr(tb,label+": "+rm(sea)+" over "+months+" mo","-"+rm(ms));
+tr(tb,"Left to allocate",rm(left),"t");
+var gd=document.getElementById("gd");gd.innerHTML="";
+[["Needs",t.needs,50],["Wants",t.wants,30],["Savings"+(ms?" and season fund":""),t.save+ms,20]].forEach(function(r){
+var p=income>0?r[1]/income*100:0,l=document.createElement("div");l.textContent=r[0]+": "+p.toFixed(0)+"% (guide "+r[2]+"%)";
+var b=document.createElement("div");b.className="bar";var i=document.createElement("i");i.style.width=Math.min(p,100)+"%";b.appendChild(i);gd.appendChild(l);gd.appendChild(b)})}
+setMode(V.mode);
+</script>
+</body>
+</html>

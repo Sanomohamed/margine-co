@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shopee & TikTok Shop Profit Calculator (Malaysia)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f5f7f6;--card:#fff;--ink:#16302d;--mute:#5a6e6b;--line:#d8e1df;--acc:#0c6e6b;--accbg:#e1f1ef;--good:#16603a;--goodbg:#dff3e6;--bad:#a02323;--badbg:#fbe4e2;--warn:#8a5a00;--warnbg:#fdf0d2;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1c1b;--card:#172927;--ink:#e6f1ef;--mute:#9db3b0;--line:#2b4543;--acc:#4fc3bd;--accbg:#18403f;--good:#7fd9a2;--goodbg:#17372a;--bad:#ff9d94;--badbg:#401d1b;--warn:#f1c45e;--warnbg:#3a2f12}}
+:root[data-theme="dark"]{--bg:#0f1c1b;--card:#172927;--ink:#e6f1ef;--mute:#9db3b0;--line:#2b4543;--acc:#4fc3bd;--accbg:#18403f;--good:#7fd9a2;--goodbg:#17372a;--bad:#ff9d94;--badbg:#401d1b;--warn:#f1c45e;--warnbg:#3a2f12}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:980px;margin:0 auto;padding:26px 16px 56px}
+h1{font-size:clamp(1.8rem,5vw,2.5rem);line-height:1.1;margin:0 0 8px;font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.05rem;margin:0 0 10px;font-weight:800}
+.lede{color:var(--mute);max-width:62ch;margin:0 0 18px}
+.grid{display:grid;grid-template-columns:1fr;gap:18px}
+@media(min-width:800px){.grid{grid-template-columns:1fr 1fr;align-items:start}.sticky{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.seg{display:flex;gap:6px;margin-bottom:16px}
+.seg button{flex:1;padding:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.f{display:grid;grid-template-columns:1fr 112px;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line)}
+.f:first-of-type{border-top:0}
+.f label{font-size:.93rem}
+.f input{width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;text-align:right}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.big{padding:16px;border-radius:12px;margin-bottom:16px}
+.big.good{background:var(--goodbg);color:var(--good)}.big.bad{background:var(--badbg);color:var(--bad)}.big.low{background:var(--warnbg);color:var(--warn)}
+.big .n{font-size:2.4rem;font-weight:800;line-height:1.1}
+.big .s{font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+td{padding:6px 0;border-top:1px solid var(--line)}
+td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+tr.t td{font-weight:800;border-top:2px solid var(--ink)}
+.mute td{color:var(--mute)}
+.note{font-size:.85rem;color:var(--mute)}
+textarea,select{width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.seg button{font-size:.95rem}
+.reset{background:none;border:1px solid var(--line);color:var(--mute);border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer}
+.tgt{display:flex;justify-content:space-between;gap:8px;padding:6px 0}
+</style>
+</head>
+<body>
+<main>
+<h1>Shop profit calculator</h1>
+<p class="lede">See what you actually keep from each Shopee, Lazada or TikTok Shop order in Malaysia, after platform fees, shipping, ads and returns. Enter the rates from your own Seller Centre for exact results.</p>
+<div class="grid">
+<div>
+<div class="seg" role="group" aria-label="Platform"><button id="p-shopee" aria-pressed="true">Shopee</button><button id="p-lazada" aria-pressed="false">Lazada</button><button id="p-tiktok" aria-pressed="false">TikTok Shop</button></div>
+<div class="card"><h2>Load products from your listings</h2>
+<p class="note" style="margin:0 0 8px">Paste product data exported from Seller Centre or returned by your own API call. Use JSON, or one product per line as name,price,cost.</p>
+<textarea id="imp" rows="4" aria-label="Product data"></textarea>
+<div style="display:flex;gap:8px;margin:8px 0"><button class="reset" id="ld">Load products</button><button class="reset" id="ex">Use example</button></div>
+<select id="pl" aria-label="Choose product"></select></div>
+<div class="card"><h2>Your product</h2><div id="g1"></div></div>
+<div class="card"><h2>Platform fees (SST included)</h2><div id="g2"></div>
+<p class="note" style="margin:10px 0 0">Starting rates are typical 2026 figures, not your exact rates. Commission varies by category and seller type. Copy yours from Seller Centre.</p></div>
+</div>
+<div class="sticky">
+<div id="big" class="big"><div class="s">Profit per order</div><div class="n" id="pn"></div><div class="s" id="pm"></div></div>
+<div class="card"><h2>Where the money goes</h2><table id="tb"></table></div>
+<div class="card"><h2>Price you need</h2>
+<div class="f"><label for="tm">Target margin (%)</label><input id="tm" type="number" inputmode="decimal" value="20" step="any"></div>
+<div class="tgt"><span>Break-even price</span><b id="be"></b></div>
+<div class="tgt"><span>Price for target margin</span><b id="tp"></b></div>
+<p class="note" style="margin:6px 0 0">Margin is profit divided by the price after your discount. Prices keep your discount amount fixed.</p></div>
+</div>
+</div>
+<p class="note">Estimates only. Fee rules change often (Shopee and Lazada both updated commissions on 14 Aug 2026, TikTok Shop added a per-order platform fee in Feb 2026), so check Seller Centre before pricing. Transaction fee is applied to the discounted price plus shipping paid by the buyer, which can slightly overstate it on TikTok Shop. Return loss assumes you lose product cost, packaging and shipping on returned orders.</p>
+</main>
+<script>
+var F1=[["price","Selling price (RM)",50],["disc","Seller discount or voucher (RM)",0],["cogs","Product cost (RM)",20],["pack","Packaging (RM)",0.8],["bship","Shipping paid by buyer (RM)",0],["sship","Shipping you pay (RM)",5],["ads","Ads cost per order (RM)",0],["ret","Return or refund rate (%)",3]];
+var F2=[["comm","Commission (%)"],["tx","Transaction fee (%)"],["svc","Programme or cashback fee (%)"],["aff","Affiliate commission (%)"],["flat","Platform fee per order (RM)"]];
+var PRE={shopee:{comm:10.26,tx:3.78,svc:0,aff:0,flat:0.54},lazada:{comm:12.96,tx:2.16,svc:0,aff:0,flat:0},tiktok:{comm:7.02,tx:3.78,svc:0,aff:0,flat:0.54}};
+function mk(host,list,defs){var h=document.getElementById(host);list.forEach(function(f){
+var d=document.createElement("div");d.className="f";
+var l=document.createElement("label");l.htmlFor=f[0];l.textContent=f[1];
+var i=document.createElement("input");i.id=f[0];i.type="number";i.inputmode="decimal";i.step="any";i.min="0";
+i.value=defs?defs[f[0]]:f[2];i.oninput=calc;d.appendChild(l);d.appendChild(i);h.appendChild(d)})}
+mk("g1",F1);mk("g2",F2,PRE.shopee);
+function v(id){var x=parseFloat(document.getElementById(id).value);return isNaN(x)?0:x}
+function rm(x){return (x<0?"-":"")+"RM"+Math.abs(x).toFixed(2)}
+document.getElementById("p-lazada").onclick=function(){setP("lazada")};
+function setP(p){["shopee","lazada","tiktok"].forEach(function(k){document.getElementById("p-"+k).setAttribute("aria-pressed",k===p)});
+for(var k in PRE[p])document.getElementById(k).value=PRE[p][k];calc()}
+document.getElementById("p-shopee").onclick=function(){setP("shopee")};
+document.getElementById("p-tiktok").onclick=function(){setP("tiktok")};
+document.getElementById("tm").oninput=calc;
+var SAMPLE='[{"name":"Cotton T-shirt","price":"39.90","cost":14},{"name":"Phone case","price":24.9,"cost":6.5},{"name":"Kuih raya tin","price":"58.00","cost":31}]';
+function num(x){var n=parseFloat(String(x).replace(/[^0-9.]/g,""));return isNaN(n)?0:n}
+function parseItems(t){var out=[];t=t.trim();if(!t)return out;
+try{var j=JSON.parse(t);if(!Array.isArray(j))j=j.items||j.products||j.data||[];
+j.forEach(function(o){var n=o.name||o.title||o.item_name||o.product_name,p=num(o.price||o.sale_price||o.current_price||o.original_price),c=num(o.cost||o.cost_price||o.cogs);if(n&&p)out.push({n:String(n),p:p,c:c})});return out}catch(e){}
+t.split(/\r?\n/).forEach(function(l){var a=l.split(",");if(a.length<2)return;var p=num(a[1]);if(p)out.push({n:a[0].trim(),p:p,c:num(a[2]||0)})});return out}
+var items=[];
+document.getElementById("ld").onclick=function(){items=parseItems(document.getElementById("imp").value);
+var s=document.getElementById("pl");s.innerHTML="";
+var o0=document.createElement("option");o0.value="";o0.textContent=items.length?"Choose a product ("+items.length+")":"No products found. Check the format.";s.appendChild(o0);
+items.forEach(function(it,i){var o=document.createElement("option");o.value=i;o.textContent=it.n+" - RM"+it.p.toFixed(2);s.appendChild(o)})};
+document.getElementById("pl").onchange=function(){var it=items[this.value];if(!it)return;
+document.getElementById("price").value=it.p;if(it.c)document.getElementById("cogs").value=it.c;calc()};
+document.getElementById("ex").onclick=function(){document.getElementById("imp").value=SAMPLE;document.getElementById("ld").onclick()};
+function calc(){
+var N=Math.max(v("price")-v("disc"),0),Sb=v("bship"),base=N+Sb;
+var comm=N*v("comm")/100,tx=base*v("tx")/100,svc=N*v("svc")/100,aff=N*v("aff")/100,flat=v("flat");
+var loss=v("ret")/100*(v("cogs")+v("pack")+v("sship"));
+var costs=v("cogs")+v("pack")+v("sship")+v("ads")+loss;
+var profit=base-comm-tx-svc-aff-flat-costs,mar=N>0?profit/N*100:0;
+var big=document.getElementById("big");big.className="big "+(profit<0?"bad":mar<10?"low":"good");
+document.getElementById("pn").textContent=rm(profit);
+document.getElementById("pm").textContent=N>0?mar.toFixed(1)+"% margin"+(profit<0?" (you lose money)":mar<10?" (thin)":""):"Enter a selling price";
+var rows=[["You receive (price after discount + buyer shipping)",rm(base),""],["Commission","-"+rm(comm).replace("-",""),"m"],["Transaction fee","-"+rm(tx),"m"],["Programme fee","-"+rm(svc),"m"],["Affiliate commission","-"+rm(aff),"m"],["Platform fee per order","-"+rm(flat),"m"],["Product cost","-"+rm(v("cogs")),"m"],["Packaging","-"+rm(v("pack")),"m"],["Shipping you pay","-"+rm(v("sship")),"m"],["Ads","-"+rm(v("ads")),"m"],["Expected return loss","-"+rm(loss),"m"],["Profit",rm(profit),"t"]];
+var tb=document.getElementById("tb");tb.innerHTML="";
+rows.forEach(function(r){var tr=document.createElement("tr");if(r[2]==="t")tr.className="t";
+r[2]==="m"&&parseFloat(r[1].replace(/[^0-9.]/g,""))===0&&(tr.className="mute");
+var a=document.createElement("td"),b=document.createElement("td");a.textContent=r[0];b.textContent=r[1];tr.appendChild(a);tr.appendChild(b);tb.appendChild(tr)});
+var pct=(v("comm")+v("tx")+v("svc")+v("aff"))/100,fixed=costs+flat-Sb*(1-v("tx")/100);
+function need(m){var d=1-pct-m;if(d<=0)return "Not reachable";var n=fixed/d;return rm(Math.max(n,0)+v("disc"))}
+document.getElementById("be").textContent=need(0);
+document.getElementById("tp").textContent=need(v("tm")/100)}
+calc();
+</script>
+</body>
+</html>

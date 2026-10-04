@@ -3,103 +3,63 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Shopee & TikTok Shop Profit Calculator (Malaysia)</title>
+<title>Everyday money tools for Malaysia</title>
+<meta name="description" content="Free tools for Malaysian small sellers and salaried families: an e-invoice starter kit, a Shopee, Lazada and TikTok Shop profit calculator, and a monthly budget planner.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&display=swap">
 <style>
-:root{--bg:#f5f7f6;--card:#fff;--ink:#16302d;--mute:#5a6e6b;--line:#d8e1df;--acc:#0c6e6b;--accbg:#e1f1ef;--good:#16603a;--goodbg:#dff3e6;--bad:#a02323;--badbg:#fbe4e2;--warn:#8a5a00;--warnbg:#fdf0d2;
+:root{--bg:#f6f7f5;--card:#fff;--ink:#1a2a28;--mute:#5b6c69;--line:#d9e0de;--acc:#0c6e6b;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1c1b;--card:#172927;--ink:#e6f1ef;--mute:#9db3b0;--line:#2b4543;--acc:#4fc3bd;--accbg:#18403f;--good:#7fd9a2;--goodbg:#17372a;--bad:#ff9d94;--badbg:#401d1b;--warn:#f1c45e;--warnbg:#3a2f12}}
-:root[data-theme="dark"]{--bg:#0f1c1b;--card:#172927;--ink:#e6f1ef;--mute:#9db3b0;--line:#2b4543;--acc:#4fc3bd;--accbg:#18403f;--good:#7fd9a2;--goodbg:#17372a;--bad:#ff9d94;--badbg:#401d1b;--warn:#f1c45e;--warnbg:#3a2f12}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a19;--card:#172524;--ink:#e8f1ef;--mute:#9db1ae;--line:#2b4240;--acc:#4fc3bd}}
+:root[data-theme="dark"]{--bg:#0f1a19;--card:#172524;--ink:#e8f1ef;--mute:#9db1ae;--line:#2b4240;--acc:#4fc3bd}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:980px;margin:0 auto;padding:26px 16px 56px}
-h1{font-size:clamp(1.8rem,5vw,2.5rem);line-height:1.1;margin:0 0 8px;font-weight:800;letter-spacing:-.02em}
-h2{font-size:1.05rem;margin:0 0 10px;font-weight:800}
-.lede{color:var(--mute);max-width:62ch;margin:0 0 18px}
-.grid{display:grid;grid-template-columns:1fr;gap:18px}
-@media(min-width:800px){.grid{grid-template-columns:1fr 1fr;align-items:start}.sticky{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
-.seg{display:flex;gap:6px;margin-bottom:16px}
-.seg button{flex:1;padding:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--acc);color:var(--bg);border-color:var(--acc)}
-.f{display:grid;grid-template-columns:1fr 112px;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line)}
-.f:first-of-type{border-top:0}
-.f label{font-size:.93rem}
-.f input{width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;text-align:right}
-button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
-.big{padding:16px;border-radius:12px;margin-bottom:16px}
-.big.good{background:var(--goodbg);color:var(--good)}.big.bad{background:var(--badbg);color:var(--bad)}.big.low{background:var(--warnbg);color:var(--warn)}
-.big .n{font-size:2.4rem;font-weight:800;line-height:1.1}
-.big .s{font-weight:600}
-table{width:100%;border-collapse:collapse;font-size:.93rem}
-td{padding:6px 0;border-top:1px solid var(--line)}
-td:last-child{text-align:right;font-variant-numeric:tabular-nums}
-tr.t td{font-weight:800;border-top:2px solid var(--ink)}
-.mute td{color:var(--mute)}
-.note{font-size:.85rem;color:var(--mute)}
-.tgt{display:flex;justify-content:space-between;gap:8px;padding:6px 0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:0 auto;padding:44px 18px 56px}
+h1{font-size:clamp(2rem,6.5vw,3.1rem);line-height:1.05;margin:0 0 12px;font-weight:800;letter-spacing:-.025em;max-width:16ch}
+.lede{color:var(--mute);max-width:56ch;margin:0 0 30px;font-size:1.05rem}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:720px){.grid{grid-template-columns:repeat(3,1fr)}}
+.tool{display:flex;flex-direction:column;gap:10px;padding:20px;background:var(--card);border:1px solid var(--line);border-radius:14px;color:inherit;text-decoration:none;transition:transform .15s,border-color .15s}
+.tool:hover{transform:translateY(-3px);border-color:var(--acc)}
+.tool:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+.ic{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;font-size:1.7rem}
+.a{background:#0c6e6b}.b{background:#c2570c}.c{background:#3a4db0}
+.tool h2{font-size:1.2rem;margin:4px 0 0;font-weight:800;line-height:1.2}
+.tool p{margin:0;color:var(--mute);font-size:.95rem;flex:1}
+.go{font-weight:600;color:var(--acc);font-size:.95rem}
+.tag{font-size:.82rem;color:var(--mute)}
+footer{margin-top:34px;font-size:.85rem;color:var(--mute);max-width:64ch}
+@media (prefers-reduced-motion:reduce){.tool{transition:none}.tool:hover{transform:none}}
 </style>
 </head>
 <body>
 <main>
-<h1>Shop profit calculator</h1>
-<p class="lede">See what you actually keep from each Shopee or TikTok Shop order in Malaysia, after platform fees, shipping, ads and returns. Enter the rates from your own Seller Centre for exact results.</p>
-<div class="grid">
-<div>
-<div class="seg" role="group" aria-label="Platform"><button id="p-shopee" aria-pressed="true">Shopee</button><button id="p-tiktok" aria-pressed="false">TikTok Shop</button></div>
-<div class="card"><h2>Your product</h2><div id="g1"></div></div>
-<div class="card"><h2>Platform fees (SST included)</h2><div id="g2"></div>
-<p class="note" style="margin:10px 0 0">Starting rates are typical 2026 figures, not your exact rates. Commission varies by category and seller type. Copy yours from Seller Centre.</p></div>
-</div>
-<div class="sticky">
-<div id="big" class="big"><div class="s">Profit per order</div><div class="n" id="pn"></div><div class="s" id="pm"></div></div>
-<div class="card"><h2>Where the money goes</h2><table id="tb"></table></div>
-<div class="card"><h2>Price you need</h2>
-<div class="f"><label for="tm">Target margin (%)</label><input id="tm" type="number" inputmode="decimal" value="20" step="any"></div>
-<div class="tgt"><span>Break-even price</span><b id="be"></b></div>
-<div class="tgt"><span>Price for target margin</span><b id="tp"></b></div>
-<p class="note" style="margin:6px 0 0">Margin is profit divided by the price after your discount. Prices keep your discount amount fixed.</p></div>
-</div>
-</div>
-<p class="note">Estimates only. Fee rules change often (Shopee updated commissions on 14 Aug 2026, TikTok Shop added a per-order platform fee in Feb 2026), so check Seller Centre before pricing. Transaction fee is applied to the discounted price plus shipping paid by the buyer, which can slightly overstate it on TikTok Shop. Return loss assumes you lose product cost, packaging and shipping on returned orders.</p>
+<h1>Everyday money tools for Malaysia</h1>
+<p class="lede">Three free tools for small sellers and salaried families. No sign-up, and your numbers stay on your device.</p>
+<nav class="grid" aria-label="Tools">
+<a class="tool" href="myinvois-starter-kit.html">
+<div class="ic a" aria-hidden="true">🧾</div>
+<h2>MyInvois e-invoice starter kit</h2>
+<p>Find out if you need to issue e-invoices, then follow a setup checklist and copy ready-made templates.</p>
+<span class="tag">For small business owners</span>
+<span class="go">Open the kit</span>
+</a>
+<a class="tool" href="shop-profit-calculator.html">
+<div class="ic b" aria-hidden="true">🧮</div>
+<h2>Shop profit calculator</h2>
+<p>See what you really keep per order on Shopee, Lazada or TikTok Shop after fees, shipping, ads and returns.</p>
+<span class="tag">For online sellers</span>
+<span class="go">Open the calculator</span>
+</a>
+<a class="tool" href="budget-planner.html">
+<div class="ic c" aria-hidden="true">💰</div>
+<h2>Monthly budget planner</h2>
+<p>Plan your salary each month, with Raya and school-season modes for the big one-off costs.</p>
+<span class="tag">For salaried families</span>
+<span class="go">Open the planner</span>
+</a>
+</nav>
+<footer>These tools give general information and estimates, not tax, legal or financial advice. Rules and platform fees change often, so check official sources before you rely on them.</footer>
 </main>
-<script>
-var F1=[["price","Selling price (RM)",50],["disc","Seller discount or voucher (RM)",0],["cogs","Product cost (RM)",20],["pack","Packaging (RM)",0.8],["bship","Shipping paid by buyer (RM)",0],["sship","Shipping you pay (RM)",5],["ads","Ads cost per order (RM)",0],["ret","Return or refund rate (%)",3]];
-var F2=[["comm","Commission (%)"],["tx","Transaction fee (%)"],["svc","Programme or cashback fee (%)"],["aff","Affiliate commission (%)"],["flat","Platform fee per order (RM)"]];
-var PRE={shopee:{comm:10.26,tx:3.78,svc:0,aff:0,flat:0.54},tiktok:{comm:7.02,tx:3.78,svc:0,aff:0,flat:0.54}};
-function mk(host,list,defs){var h=document.getElementById(host);list.forEach(function(f){
-var d=document.createElement("div");d.className="f";
-var l=document.createElement("label");l.htmlFor=f[0];l.textContent=f[1];
-var i=document.createElement("input");i.id=f[0];i.type="number";i.inputmode="decimal";i.step="any";i.min="0";
-i.value=defs?defs[f[0]]:f[2];i.oninput=calc;d.appendChild(l);d.appendChild(i);h.appendChild(d)})}
-mk("g1",F1);mk("g2",F2,PRE.shopee);
-function v(id){var x=parseFloat(document.getElementById(id).value);return isNaN(x)?0:x}
-function rm(x){return (x<0?"-":"")+"RM"+Math.abs(x).toFixed(2)}
-function setP(p){["shopee","tiktok"].forEach(function(k){document.getElementById("p-"+k).setAttribute("aria-pressed",k===p)});
-for(var k in PRE[p])document.getElementById(k).value=PRE[p][k];calc()}
-document.getElementById("p-shopee").onclick=function(){setP("shopee")};
-document.getElementById("p-tiktok").onclick=function(){setP("tiktok")};
-document.getElementById("tm").oninput=calc;
-function calc(){
-var N=Math.max(v("price")-v("disc"),0),Sb=v("bship"),base=N+Sb;
-var comm=N*v("comm")/100,tx=base*v("tx")/100,svc=N*v("svc")/100,aff=N*v("aff")/100,flat=v("flat");
-var loss=v("ret")/100*(v("cogs")+v("pack")+v("sship"));
-var costs=v("cogs")+v("pack")+v("sship")+v("ads")+loss;
-var profit=base-comm-tx-svc-aff-flat-costs,mar=N>0?profit/N*100:0;
-var big=document.getElementById("big");big.className="big "+(profit<0?"bad":mar<10?"low":"good");
-document.getElementById("pn").textContent=rm(profit);
-document.getElementById("pm").textContent=N>0?mar.toFixed(1)+"% margin"+(profit<0?" (you lose money)":mar<10?" (thin)":""):"Enter a selling price";
-var rows=[["You receive (price after discount + buyer shipping)",rm(base),""],["Commission","-"+rm(comm).replace("-",""),"m"],["Transaction fee","-"+rm(tx),"m"],["Programme fee","-"+rm(svc),"m"],["Affiliate commission","-"+rm(aff),"m"],["Platform fee per order","-"+rm(flat),"m"],["Product cost","-"+rm(v("cogs")),"m"],["Packaging","-"+rm(v("pack")),"m"],["Shipping you pay","-"+rm(v("sship")),"m"],["Ads","-"+rm(v("ads")),"m"],["Expected return loss","-"+rm(loss),"m"],["Profit",rm(profit),"t"]];
-var tb=document.getElementById("tb");tb.innerHTML="";
-rows.forEach(function(r){var tr=document.createElement("tr");if(r[2]==="t")tr.className="t";
-r[2]==="m"&&parseFloat(r[1].replace(/[^0-9.]/g,""))===0&&(tr.className="mute");
-var a=document.createElement("td"),b=document.createElement("td");a.textContent=r[0];b.textContent=r[1];tr.appendChild(a);tr.appendChild(b);tb.appendChild(tr)});
-var pct=(v("comm")+v("tx")+v("svc")+v("aff"))/100,fixed=costs+flat-Sb*(1-v("tx")/100);
-function need(m){var d=1-pct-m;if(d<=0)return "Not reachable";var n=fixed/d;return rm(Math.max(n,0)+v("disc"))}
-document.getElementById("be").textContent=need(0);
-document.getElementById("tp").textContent=need(v("tm")/100)}
-calc();
-</script>
 </body>
 </html>
