@@ -48,6 +48,21 @@ tfoot td{background:#eef3fb;font-weight:700;padding:7px 6px}
 .f .v{flex:1;min-width:0;border-bottom:1px solid #9bb0d6;font:14px Arial;color:#111;padding:2px 3px;min-height:22px}
 td .v{padding:7px 5px;font:13px Arial;color:#111;min-height:31px}
 td.num .v{text-align:right}.rm .v{flex:1;border-bottom:1px solid #9bb0d6;font:14px Arial;padding:2px 3px;min-height:22px}
+@media (max-width:760px){
+.wrap{padding:8px}#sheet{width:100%}.btn{flex:1 1 30%;font-size:12.5px;padding:8px 4px}.bar{gap:6px;padding:8px}.hint{font-size:12px}
+.hd{flex-wrap:wrap;gap:10px;padding:12px}.logo{font-size:38px;padding-right:12px}.logo small{font-size:11px}
+.co h1{font-size:20px}.co p{font-size:13px}.ct{flex-direction:column;gap:4px;font-size:12px}
+.addr{font-size:11px;padding:6px 12px}.pill{max-width:86%;font-size:19px}
+.g{grid-template-columns:1fr;padding:6px 14px 10px}.f input,.rm input{font-size:16px}
+table,thead,tbody,tfoot,tr,td{display:block;width:auto}table{margin:0 12px;width:auto}thead{display:none}
+tr{border:1px solid #c9d2e3;border-radius:8px;margin-bottom:10px;overflow:hidden}
+td{border:0;border-bottom:1px solid #e3e9f4;display:flex;align-items:center;gap:8px;padding:2px 10px;min-height:40px}
+td::before{content:attr(data-l);flex:0 0 40%;font:700 12px Arial;color:#1c4b9b}
+td input{font-size:16px;border-bottom:1px solid #9bb0d6;padding:6px 4px}td.num{text-align:left}td.num input{text-align:right}tfoot td.num{justify-content:space-between}
+td.n{width:auto;text-align:left;background:#eef3fb;font-weight:700;padding:8px 10px;min-height:0;position:relative}td.n::before{content:"Item ";flex:0 0 auto}
+.x{top:6px;right:8px;font-size:13px;padding:3px 8px;border-radius:4px}
+tfoot tr{background:#eef3fb}tfoot td{font-weight:700}tfoot td:not([data-l]){display:none}
+.rm{padding:10px 14px 0}.sig{padding:20px 14px 0}}
 </style>
 </head>
 <body>
@@ -70,22 +85,22 @@ const save=()=>{try{localStorage.setItem('tsd-draft',JSON.stringify(S))}catch(e)
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
 const num=v=>parseFloat(v)||0;
 const fld=(k,l)=>`<div class="f">${l}<input data-f="${k}" value="${esc(S.f[k])}"></div>`;
-const cell=(i,c,cls='')=>`<td class="${cls}"><input data-i="${i}" data-c="${c}" value="${esc(S.items[i][c])}"></td>`;
+const cell=(i,c,cls='',l='')=>`<td class="${cls}" data-l="${l}"><input data-i="${i}" data-c="${c}" value="${esc(S.items[i][c])}"></td>`;
 const del=i=>`<button class="x" data-del="${i}" data-html2canvas-ignore>×</button>`;
 const header=`<div class="hd"><div class="logo">TSD<small>GLOBAL EXPRESS</small></div>
 <div class="co"><h1>TSD GLOBAL <b>EXPRESS</b></h1><p>International Cargo &amp; Logistics</p>
 <div class="ct"><div>Guangzhou, China 广州<br>China: +86 137 2527 4753<br>chuaibujalloh@gmail.com</div><div>Guinea 几内亚<br>Guinée: +224 627 191 824<br><i>Votre confiance, notre priorité</i></div></div></div></div>
 <div class="addr">Guangzhou Office : 广东省广州市越秀区流花街道环市西路185号纳玛国际港5楼507室</div>`;
 function render(){
-  const ri=S.items.map((_,i)=>`<tr><td class="n">${i+1}${del(i)}</td>${cell(i,'d')}${cell(i,'h')}${cell(i,'q','num')}${cell(i,'u','num')}<td class="num" data-rt="${i}" style="padding:7px 5px"></td></tr>`).join('');
-  const rp=S.items.map((_,i)=>`<tr><td class="n">${i+1}${del(i)}</td>${cell(i,'d')}${cell(i,'h')}${cell(i,'q','num')}${cell(i,'nw','num')}${cell(i,'gw','num')}${cell(i,'dim')}${cell(i,'cbm','num')}</tr>`).join('');
+  const ri=S.items.map((_,i)=>`<tr><td class="n">${i+1}${del(i)}</td>${cell(i,'d','','Description')}${cell(i,'h','','HS Code')}${cell(i,'q','num','Quantity')}${cell(i,'u','num','Unit price (USD)')}<td class="num" data-l="Total (USD)" data-rt="${i}" style="padding:7px 5px"></td></tr>`).join('');
+  const rp=S.items.map((_,i)=>`<tr><td class="n">${i+1}${del(i)}</td>${cell(i,'d','','Description')}${cell(i,'h','','HS Code')}${cell(i,'q','num','QTY (PCS)')}${cell(i,'nw','num','Net weight (KG)')}${cell(i,'gw','num','Gross weight (KG)')}${cell(i,'dim','','Dimensions (CM)')}${cell(i,'cbm','num','CBM')}</tr>`).join('');
   $('#sheet').innerHTML=`<section class="doc" id="d1">${header}<div class="pill">PROFORMA INVOICE</div><div class="g">${fld('invNo','Invoice No. :')}${fld('shipper','Shipper :')}${fld('date','Date :')}${fld('consignee','Consignee :')}${fld('customer','Customer :')}${fld('destination','Destination :')}${fld('address','Address :')}${fld('pay','Payment Terms :')}<div></div>${fld('valid','Validity :')}</div>
 <table><thead><tr><th>No.</th><th style="width:34%">Description of Goods</th><th>HS Code</th><th>Quantity</th><th>Unit Price (USD)</th><th>Total Amount (USD)</th></tr></thead><tbody>${ri}</tbody>
-<tfoot><tr><td colspan="3" style="text-align:right">TOTAL</td><td class="num tq"></td><td></td><td class="num tt"></td></tr></tfoot></table></section>
+<tfoot><tr><td colspan="3" style="text-align:right">TOTAL</td><td class="num tq" data-l="Total quantity"></td><td></td><td class="num tt" data-l="Total amount (USD)"></td></tr></tfoot></table></section>
 <div class="gap" data-pad></div>
 <section class="doc" id="d2">${header}<div class="pill" style="width:300px">PACKING LIST</div><div class="g">${fld('shipper','Shipper :')}${fld('invNo','Invoice No. :')}${fld('consignee','Consignee :')}${fld('pkNo','Packing List No. :')}${fld('destination','Destination :')}<div class="f">Total Packages :<input id="tp" data-f="pkgs" value="${esc(S.f.pkgs)}"></div>${fld('date','Date :')}<div class="f">Total Gross Weight :<input id="tg" readonly></div><div></div><div class="f">Total CBM :<input id="tc" readonly></div></div>
 <table><thead><tr><th>No.</th><th style="width:26%">Description of Goods</th><th>HS Code</th><th>QTY (PCS)</th><th>Net Weight (KG)</th><th>Gross Weight (KG)</th><th>Dimensions (CM)</th><th>CBM</th></tr></thead><tbody>${rp}</tbody>
-<tfoot><tr><td colspan="3" style="text-align:right">TOTAL</td><td class="num tq"></td><td class="num tn"></td><td class="num tg2"></td><td></td><td class="num tc2"></td></tr></tfoot></table>
+<tfoot><tr><td colspan="3" style="text-align:right">TOTAL</td><td class="num tq" data-l="Total quantity"></td><td class="num tn" data-l="Total net (KG)"></td><td class="num tg2" data-l="Total gross (KG)"></td><td></td><td class="num tc2" data-l="Total CBM"></td></tr></tfoot></table>
 <div class="rm">Remarks :<input data-f="remarks" value="${esc(S.f.remarks)}"></div><div class="sig"><span>Authorized Signature &amp; Stamp</span></div></section>`;
   totals();
 }
@@ -106,7 +121,7 @@ document.addEventListener('click',e=>{const d=e.target.dataset;
   if(d.del!==undefined&&S.items.length>1){S.items.splice(+d.del,1);save();render()}});
 $('#add').onclick=()=>{S.items.push({});save();render()};
 $('#clr').onclick=()=>{if(confirm('Clear everything and start a new document?')){S=blank();save();render()}};
-const cap=el=>html2canvas(el,{scale:2,backgroundColor:'#fff',ignoreElements:x=>x.hasAttribute&&x.hasAttribute('data-html2canvas-ignore'),
+const cap=el=>html2canvas(el,{scale:2,windowWidth:1100,backgroundColor:'#fff',ignoreElements:x=>x.hasAttribute&&x.hasAttribute('data-html2canvas-ignore'),
   onclone:d=>d.querySelectorAll('#sheet input').forEach(i=>{const v=d.createElement('div');v.className='v';v.textContent=i.value||'';i.replaceWith(v)})});
 async function out(kind){
   const dl=await claude.use('downloads');
