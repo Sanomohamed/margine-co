@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Image Compressor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f4f8f9;--card:#fff;--ink:#14282d;--mute:#58707a;--line:#d6e2e6;--acc:#0e7490;--accbg:#def1f6;--good:#16603a;--bad:#a02323;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a1e;--card:#162429;--ink:#e6f1f4;--mute:#9db4bb;--line:#2a4249;--acc:#5fcbe3;--accbg:#183a44;--good:#7fd9a2;--bad:#ff9d94}}
+:root[data-theme="dark"]{--bg:#0e1a1e;--card:#162429;--ink:#e6f1f4;--mute:#9db4bb;--line:#2a4249;--acc:#5fcbe3;--accbg:#183a44;--good:#7fd9a2;--bad:#ff9d94}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:26px 16px 56px}
+h1{font-size:clamp(1.8rem,5vw,2.4rem);line-height:1.1;margin:0 0 8px;font-weight:800;letter-spacing:-.02em}
+.lede{color:var(--mute);margin:0 0 18px;max-width:60ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.drop{display:block;border:2px dashed var(--line);border-radius:12px;padding:30px 16px;text-align:center;cursor:pointer;background:var(--card)}
+.drop.on,.drop:hover{border-color:var(--acc);background:var(--accbg)}
+.drop b{display:block;font-size:1.1rem}
+.drop span{color:var(--mute);font-size:.92rem}
+.drop input{position:absolute;opacity:0;width:1px;height:1px}
+.drop:focus-within{outline:3px solid var(--acc);outline-offset:2px}
+.set{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:600px){.set{grid-template-columns:repeat(3,1fr)}}
+label.l{display:block;font-weight:600;font-size:.92rem;margin-bottom:4px}
+select,input[type=range]{width:100%}
+select{padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+input[type=range]{accent-color:var(--acc)}
+select:focus-visible,input:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.row{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row img{width:56px;height:56px;object-fit:cover;border-radius:8px;background:var(--line)}
+.nm{font-weight:600;overflow-wrap:anywhere}
+.sz{font-size:.9rem;color:var(--mute)}
+.sv{color:var(--good);font-weight:600}.er{color:var(--bad)}
+a.dl{background:var(--acc);color:var(--bg);text-decoration:none;font-weight:600;border-radius:8px;padding:8px 14px;white-space:nowrap}
+.note{font-size:.85rem;color:var(--mute)}
+</style>
+</head>
+<body>
+<main>
+<h1>Image compressor</h1>
+<p class="lede">Make photos smaller for marketplace listings, email and websites. Your images are processed in your browser and are never uploaded.</p>
+<label class="drop" id="dz"><b>Choose images or drop them here</b><span>JPEG, PNG or WebP. You can pick many at once.</span><input id="fi" type="file" accept="image/*" multiple></label>
+<div class="card" style="margin-top:16px"><div class="set">
+<div><label class="l" for="q">Quality: <span id="qv">75</span></label><input id="q" type="range" min="30" max="95" value="75"></div>
+<div><label class="l" for="mx">Longest side</label><select id="mx"><option value="0">Keep original size</option><option value="2000">2000 px</option><option value="1600" selected>1600 px</option><option value="1200">1200 px</option><option value="800">800 px</option></select></div>
+<div><label class="l" for="fm">Save as</label><select id="fm"><option value="image/jpeg" selected>JPEG (works everywhere)</option><option value="image/webp">WebP (smallest)</option><option value="image/png">PNG (lossless)</option></select></div>
+</div><p class="note" style="margin:10px 0 0" id="hint"></p></div>
+<div class="card" id="res" hidden></div>
+<p class="note">PNG keeps transparency but does not shrink much. Choose JPEG or WebP for the biggest savings. Transparent areas become white in JPEG.</p>
+</main>
+<script>
+var $=function(i){return document.getElementById(i)},files=[],urls=[],run=0,tm;
+function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
+function ext(t){return t==="image/jpeg"?"jpg":t==="image/webp"?"webp":"png"}
+async function squeeze(file){
+var bm=await createImageBitmap(file),mx=+$("mx").value,m=Math.max(bm.width,bm.height),s=mx&&m>mx?mx/m:1,
+w=Math.round(bm.width*s),h=Math.round(bm.height*s),c=document.createElement("canvas");c.width=w;c.height=h;
+var x=c.getContext("2d"),t=$("fm").value;if(t==="image/jpeg"){x.fillStyle="#fff";x.fillRect(0,0,w,h)}
+x.drawImage(bm,0,0,w,h);if(bm.close)bm.close();
+var b=await new Promise(function(r){c.toBlob(r,t,$("q").value/100)});c.width=0;
+if(!b)throw new Error("This browser cannot save that format.");
+if(b.size>=file.size&&s===1&&file.type===t)return{blob:file,w:w,h:h,t:t,kept:true};
+return{blob:b,w:w,h:h,t:t}}
+function show(list){
+var box=$("res");box.hidden=!list.length;box.innerHTML="";
+list.forEach(function(it){
+var r=document.createElement("div");r.className="row";
+var im=document.createElement("img");im.alt="";var info=document.createElement("div"),n=document.createElement("div"),s=document.createElement("div");
+n.className="nm";n.textContent=it.file.name;s.className="sz";info.appendChild(n);info.appendChild(s);
+r.appendChild(im);r.appendChild(info);
+if(it.err){s.className="sz er";s.textContent=it.err}
+else if(it.out){var o=it.out,u=URL.createObjectURL(o.blob);urls.push(u);im.src=u;
+var pct=Math.round((1-o.blob.size/it.file.size)*100);
+s.textContent=fmt(it.file.size)+" to "+fmt(o.blob.size)+" ("+o.w+"x"+o.h+") ";
+var sv=document.createElement("span");sv.className="sv";sv.textContent=o.kept?"Already small, kept original":"Saved "+pct+"%";s.appendChild(sv);
+var a=document.createElement("a");a.className="dl";a.href=u;a.download=it.file.name.replace(/\.[^.]+$/,"")+(o.kept?"":"-compressed.")+(o.kept?it.file.name.split(".").pop():ext(o.t));a.textContent="Download";r.appendChild(a)}
+else{s.textContent="Working..."}
+box.appendChild(r)})}
+async function go(){
+var me=++run;urls.forEach(function(u){URL.revokeObjectURL(u)});urls=[];
+var list=files.map(function(f){return{file:f}});show(list);
+for(var i=0;i<list.length;i++){
+try{list[i].out=await squeeze(list[i].file)}catch(e){list[i].err="Could not read this file. Try a JPEG, PNG or WebP."}
+if(me!==run)return;urls.forEach(function(u){URL.revokeObjectURL(u)});urls=[];show(list)}}
+function again(){clearTimeout(tm);tm=setTimeout(go,250)}
+function add(fl){files=Array.prototype.slice.call(fl).filter(function(f){return /^image\//.test(f.type)||/\.(heic|heif)$/i.test(f.name)});go()}
+$("fi").onchange=function(){add(this.files)};
+["dragover","dragenter"].forEach(function(e){$("dz").addEventListener(e,function(ev){ev.preventDefault();$("dz").classList.add("on")})});
+["dragleave","drop"].forEach(function(e){$("dz").addEventListener(e,function(ev){ev.preventDefault();$("dz").classList.remove("on")})});
+$("dz").addEventListener("drop",function(ev){add(ev.dataTransfer.files)});
+function hint(){var p=$("fm").value==="image/png";$("q").disabled=p;$("hint").textContent=p?"PNG is lossless, so the quality slider does not apply. Reduce the longest side to save space.":"Around 70 to 80 quality keeps photos looking sharp while cutting size a lot."}
+$("q").oninput=function(){$("qv").textContent=this.value;again()};
+$("mx").onchange=again;$("fm").onchange=function(){hint();again()};hint();
+</script>
+</body>
+</html>
