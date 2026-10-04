@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TSD Global Express – Invoice & Packing List</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--bg:#eef1f6;--ink:#14213d;--card:#fff;--line:#c9d2e3;--blue:#1c4b9b;--red:#d8232a;--muted:#5b6785;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1624;--ink:#e8edf8;--card:#1a2338;--line:#34415f;--muted:#9aa7c6}}
+:root[data-theme="dark"]{--bg:#0f1624;--ink:#e8edf8;--card:#1a2338;--line:#34415f;--muted:#9aa7c6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 "Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:10px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tabs{display:flex;gap:6px;flex:1 1 100%}
+.tab{flex:1;padding:10px;border:2px solid var(--blue);background:transparent;color:var(--blue);font-weight:700;border-radius:8px;font-size:15px}
+.tab.on{background:var(--blue);color:#fff}
+.btn{padding:9px 14px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:600;font-size:14px}
+.btn.wa{background:#1fa855;border-color:#1fa855;color:#fff}.btn.pri{background:var(--red);border-color:var(--red);color:#fff}
+.hint{font-size:12.5px;color:var(--muted);padding:8px 12px 0}
+.wrap{overflow-x:auto;padding:12px}
+#sheet{width:900px;background:#fff;color:#14213d;margin:0 auto;padding:0 0 18px;box-shadow:0 2px 14px rgba(0,0,0,.18)}
+.hd{display:flex;align-items:center;gap:18px;padding:16px 22px 12px;background:linear-gradient(100deg,#fff 55%,#e6f0fb)}
+.logo{font:italic 900 56px/1 Georgia,serif;color:#1c4b9b;letter-spacing:-2px;border-right:2px solid #c9d2e3;padding-right:18px}
+.logo small{display:block;font:700 15px Arial,sans-serif;color:#d8232a;letter-spacing:0;font-style:normal;margin-top:2px}
+.co h1{margin:0;font:800 30px/1.05 Arial,sans-serif;color:#1c4b9b}.co h1 b{color:#d8232a}
+.co p{margin:2px 0 6px;font:600 15px Arial;color:#1c4b9b}
+.ct{display:flex;gap:26px;font:600 13px Arial;color:#14213d}.ct div{line-height:1.5}
+.addr{background:#1c4b9b;color:#fff;font:600 12.5px Arial;padding:6px 22px;border-bottom:3px solid #d8232a}
+.pill{margin:14px auto 10px;width:330px;text-align:center;background:#1c4b9b;color:#fff;font:800 24px Arial;padding:7px;border-radius:24px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:6px 36px;padding:6px 26px 10px}
+.f{display:flex;align-items:flex-end;gap:6px;font:700 13px Arial;color:#1c4b9b;white-space:nowrap}
+.f input{flex:1;min-width:0;border:0;border-bottom:1px solid #9bb0d6;font:14px Arial;color:#111;padding:2px 3px;background:transparent;outline:none}
+table{border-collapse:collapse;width:calc(100% - 44px);margin:0 22px;font:13px Arial}
+th{background:#1c4b9b;color:#fff;padding:7px 4px;font-weight:700}
+td{border:1px solid #c9d2e3;padding:0;position:relative}
+td input{width:100%;border:0;padding:7px 5px;font:13px Arial;background:transparent;outline:none;color:#111}
+td.n{text-align:center;width:40px;color:#444}.num input,.num{text-align:right}
+.x{position:absolute;right:-1px;top:-1px;border:0;background:#d8232a;color:#fff;font-size:11px;line-height:1;padding:2px 4px;border-radius:0 0 0 4px}
+tfoot td{background:#eef3fb;font-weight:700;padding:7px 6px}
+.rm{padding:10px 26px 0;font:700 13px Arial;color:#1c4b9b;display:flex;gap:6px;align-items:flex-end}
+.rm input{flex:1;border:0;border-bottom:1px solid #9bb0d6;font:14px Arial;padding:2px 3px;outline:none;background:transparent}
+.sig{text-align:right;padding:26px 26px 0;font:700 11px Arial;color:#1c4b9b}.sig span{border-top:1px solid #1c4b9b;padding-top:3px;display:inline-block;min-width:200px;text-align:center}
+.doc{background:#fff;padding-bottom:18px}.gap{height:26px;background:#e8edf5}
+.v{white-space:pre-wrap;line-height:1.35}
+.f .v{flex:1;min-width:0;border-bottom:1px solid #9bb0d6;font:14px Arial;color:#111;padding:2px 3px;min-height:22px}
+td .v{padding:7px 5px;font:13px Arial;color:#111;min-height:31px}
+td.num .v{text-align:right}.rm .v{flex:1;border-bottom:1px solid #9bb0d6;font:14px Arial;padding:2px 3px;min-height:22px}
+</style>
+</head>
+<body>
+<div class="bar">
+  <button class="btn" id="add">+ Add item</button>
+  <button class="btn pri" id="png">Save image (PNG)</button>
+  <button class="btn pri" id="pdf">Save PDF</button>
+  <button class="btn wa" id="wa">Share PDF on WhatsApp</button>
+  <button class="btn" id="clr">New document</button>
+</div>
+<div class="hint">Type directly on the documents. Shared fields and goods are entered once and fill in on both. PNG saves both on one image; PDF saves both as two pages in one file. Then send the file to WhatsApp or WeChat from your Files or Gallery.</div>
+<div class="wrap"><div id="sheet"></div></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const today=()=>new Date().toISOString().slice(0,10);
+const blank=()=>({f:{invNo:'',date:today(),customer:'',address:'',shipper:'',consignee:'',destination:'',pay:'',valid:'',pkNo:'',pkgs:'',remarks:''},items:[{},{},{}]});
+let S=blank();
+try{const r=JSON.parse(localStorage.getItem('tsd-draft'));if(r&&r.f&&r.items)S=r}catch(e){}
+const save=()=>{try{localStorage.setItem('tsd-draft',JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const num=v=>parseFloat(v)||0;
+const fld=(k,l)=>`<div class="f">${l}<input data-f="${k}" value="${esc(S.f[k])}"></div>`;
+const cell=(i,c,cls='')=>`<td class="${cls}"><input data-i="${i}" data-c="${c}" value="${esc(S.items[i][c])}"></td>`;
+const del=i=>`<button class="x" data-del="${i}" data-html2canvas-ignore>×</button>`;
+const header=`<div class="hd"><div class="logo">TSD<small>GLOBAL EXPRESS</small></div>
+<div class="co"><h1>TSD GLOBAL <b>EXPRESS</b></h1><p>International Cargo &amp; Logistics</p>
+<div class="ct"><div>Guangzhou, China 广州<br>China: +86 137 2527 4753<br>chuaibujalloh@gmail.com</div><div>Guinea 几内亚<br>Guinée: +224 627 191 824<br><i>Votre confiance, notre priorité</i></div></div></div></div>
+<div class="addr">Guangzhou Office : 广东省广州市越秀区流花街道环市西路185号纳玛国际港5楼507室</div>`;
+function render(){
+  const ri=S.items.map((_,i)=>`<tr><td class="n">${i+1}${del(i)}</td>${cell(i,'d')}${cell(i,'h')}${cell(i,'q','num')}${cell(i,'u','num')}<td class="num" data-rt="${i}" style="padding:7px 5px"></td></tr>`).join('');
+  const rp=S.items.map((_,i)=>`<tr><td class="n">${i+1}${del(i)}</td>${cell(i,'d')}${cell(i,'h')}${cell(i,'q','num')}${cell(i,'nw','num')}${cell(i,'gw','num')}${cell(i,'dim')}${cell(i,'cbm','num')}</tr>`).join('');
+  $('#sheet').innerHTML=`<section class="doc" id="d1">${header}<div class="pill">PROFORMA INVOICE</div><div class="g">${fld('invNo','Invoice No. :')}${fld('shipper','Shipper :')}${fld('date','Date :')}${fld('consignee','Consignee :')}${fld('customer','Customer :')}${fld('destination','Destination :')}${fld('address','Address :')}${fld('pay','Payment Terms :')}<div></div>${fld('valid','Validity :')}</div>
+<table><thead><tr><th>No.</th><th style="width:34%">Description of Goods</th><th>HS Code</th><th>Quantity</th><th>Unit Price (USD)</th><th>Total Amount (USD)</th></tr></thead><tbody>${ri}</tbody>
+<tfoot><tr><td colspan="3" style="text-align:right">TOTAL</td><td class="num tq"></td><td></td><td class="num tt"></td></tr></tfoot></table></section>
+<div class="gap" data-pad></div>
+<section class="doc" id="d2">${header}<div class="pill" style="width:300px">PACKING LIST</div><div class="g">${fld('shipper','Shipper :')}${fld('invNo','Invoice No. :')}${fld('consignee','Consignee :')}${fld('pkNo','Packing List No. :')}${fld('destination','Destination :')}<div class="f">Total Packages :<input id="tp" data-f="pkgs" value="${esc(S.f.pkgs)}"></div>${fld('date','Date :')}<div class="f">Total Gross Weight :<input id="tg" readonly></div><div></div><div class="f">Total CBM :<input id="tc" readonly></div></div>
+<table><thead><tr><th>No.</th><th style="width:26%">Description of Goods</th><th>HS Code</th><th>QTY (PCS)</th><th>Net Weight (KG)</th><th>Gross Weight (KG)</th><th>Dimensions (CM)</th><th>CBM</th></tr></thead><tbody>${rp}</tbody>
+<tfoot><tr><td colspan="3" style="text-align:right">TOTAL</td><td class="num tq"></td><td class="num tn"></td><td class="num tg2"></td><td></td><td class="num tc2"></td></tr></tfoot></table>
+<div class="rm">Remarks :<input data-f="remarks" value="${esc(S.f.remarks)}"></div><div class="sig"><span>Authorized Signature &amp; Stamp</span></div></section>`;
+  totals();
+}
+const fmt=n=>n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const setAll=(sel,v)=>$$(sel).forEach(e=>e.textContent=v);
+function totals(){
+  let q=0,t=0,n=0,g=0,c=0;
+  S.items.forEach((it,i)=>{q+=num(it.q);n+=num(it.nw);g+=num(it.gw);c+=num(it.cbm);const r=num(it.q)*num(it.u);t+=r;setAll(`[data-rt="${i}"]`,r?fmt(r):'')});
+  setAll('.tq',q||'');setAll('.tt',t?fmt(t):'');setAll('.tn',n?fmt(n):'');setAll('.tg2',g?fmt(g):'');setAll('.tc2',c?c.toFixed(3):'');
+  $('#tg').value=g?fmt(g):'';$('#tc').value=c?c.toFixed(3):'';
+  if(!S.f.pkgs)$('#tp').placeholder=S.items.filter(i=>i.d).length||'';
+}
+document.addEventListener('input',e=>{const t=e.target,d=t.dataset;
+  if(d.f){S.f[d.f]=t.value;$$(`[data-f="${d.f}"]`).forEach(o=>{if(o!==t)o.value=t.value})}
+  else if(d.i!==undefined){S.items[d.i][d.c]=t.value;$$(`[data-i="${d.i}"][data-c="${d.c}"]`).forEach(o=>{if(o!==t)o.value=t.value});totals()}
+  save()});
+document.addEventListener('click',e=>{const d=e.target.dataset;
+  if(d.del!==undefined&&S.items.length>1){S.items.splice(+d.del,1);save();render()}});
+$('#add').onclick=()=>{S.items.push({});save();render()};
+$('#clr').onclick=()=>{if(confirm('Clear everything and start a new document?')){S=blank();save();render()}};
+const cap=el=>html2canvas(el,{scale:2,backgroundColor:'#fff',ignoreElements:x=>x.hasAttribute&&x.hasAttribute('data-html2canvas-ignore'),
+  onclone:d=>d.querySelectorAll('#sheet input').forEach(i=>{const v=d.createElement('div');v.className='v';v.textContent=i.value||'';i.replaceWith(v)})});
+async function out(kind){
+  const dl=await claude.use('downloads');
+  if(!dl){alert('Saving is not available in this view. Open the page in the Claude app or on claude.ai.');return}
+  document.activeElement&&document.activeElement.blur();
+  const name='TSD-'+(S.f.invNo||S.f.date||'Documents').replace(/[^\w-]+/g,'_');
+  try{
+    if(kind==='png'){const cv=await cap($('#sheet'));const b=await new Promise(r=>cv.toBlob(r,'image/png'));await dl.save({filename:name+'.png',data:b})}
+    else await dl.save({filename:name+'.pdf',data:await makePdf()})
+  }catch(err){if(!err||err.code!=='declined')alert('Could not save: '+((err&&err.message)||err))}
+}
+async function makePdf(){
+  const a=await cap($('#d1')),b=await cap($('#d2'));const w=Math.max(a.width,b.width),h=Math.max(a.height,b.height);
+  const p=new window.jspdf.jsPDF({orientation:w>h?'l':'p',unit:'px',format:[w,h],hotfixes:['px_scaling']});
+  p.addImage(a.toDataURL('image/jpeg',.95),'JPEG',0,0,a.width,a.height);p.addPage([w,h],w>h?'l':'p');
+  p.addImage(b.toDataURL('image/jpeg',.95),'JPEG',0,0,b.width,b.height);
+  return p.output('arraybuffer');
+}
+async function shareWA(){
+  document.activeElement&&document.activeElement.blur();
+  const name='TSD-'+(S.f.invNo||S.f.date||'Documents').replace(/[^\w-]+/g,'_')+'.pdf';
+  const text='TSD Global Express: Proforma Invoice and Packing List'+(S.f.invNo?' ('+S.f.invNo+')':'');
+  try{
+    const file=new File([await makePdf()],name,{type:'application/pdf'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:text,text});return}
+    const dl=await claude.use('downloads');
+    if(!dl){alert('Sharing is not available in this view. Open the page in the Claude app or on claude.ai.');return}
+    await dl.save({filename:name,data:file});
+    alert('PDF saved. Opening WhatsApp: attach the saved PDF to your chat.');
+    try{window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank')}catch(e){}
+  }catch(err){if(err&&(err.name==='AbortError'||err.code==='declined'))return;alert('Could not share: '+((err&&err.message)||err))}
+}
+$('#wa').onclick=shareWA;
+$('#png').onclick=()=>out('png');$('#pdf').onclick=()=>out('pdf');
+render();
+</script>
+</body>
+</html>
